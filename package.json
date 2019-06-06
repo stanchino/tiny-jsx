@@ -22,7 +22,7 @@
     "build": "rimraf dist && yarn rollup -c",
     "dev:server": "webpack-dev-server",
     "dev": "run-p watch dev:server",
-    "serve": "yarn build && NODE_ENV=production webpack --mode production && NODE_ENV=production static -z -p 5000 build",
+    "serve": "yarn build && NODE_ENV=production webpack --mode production && NODE_ENV=production static -z -p 5000 build"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",

@@ -1,6 +1,6 @@
 {
   "name": "tiny-jsx-emitter",
-  "version": "1.0.2",
+  "version": "1.0.7",
   "license": "MIT",
   "author": {
     "name": "Stanimir Dimitrov",
@@ -13,8 +13,8 @@
   "engines": {
     "node": ">=6.0.0"
   },
-  "main": "index.js",
+  "main": "index",
   "source": "index.js",
-  "module": "index.esm.js",
+  "module": "index.js",
   "types": "index.d.ts"
 }

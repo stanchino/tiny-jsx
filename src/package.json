@@ -1,6 +1,6 @@
 {
   "name": "tiny-jsx",
-  "version": "1.0.2",
+  "version": "1.0.7",
   "license": "MIT",
   "author": {
     "name": "Stanimir Dimitrov",
@@ -13,11 +13,10 @@
   "engines": {
     "node": ">=6.0.0"
   },
-  "main": "index.js",
-  "module": "index.esm.js",
+  "main": "index",
   "browser": {
-    "tiny-jsx": "tiny-jsx.umd.js",
-    "tiny-jsx-dom": "tiny-jsx-dom.umd.js"
+    "tiny-jsx": "tiny-jsx.js",
+    "tiny-jsx-dom": "tiny-jsx-dom.js"
   },
   "types": "index.d.ts"
 }

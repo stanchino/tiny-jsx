@@ -33,12 +33,17 @@ render(<Clock />, document.body);
 ## Getting Started
 
 ### Install
-```bash
-$ npm install --save tiny-jsx
-```
-or
+
+When using NodeJS with `yarn` or `npm`
 ```bash
 $ yarn add tiny-jsx
+or
+$ npm install --save tiny-jsx
+```
+or in the browser
+```html
+<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx/tiny-jsx.js" />
+<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx/tiny-jsx-dom.js" />
 ```
 
 ### Import

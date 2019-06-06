@@ -23,9 +23,9 @@ export default [
     input: 'src/index.js',
     output: {
       name: 'TinyJSX',
-      file: 'dist/tiny-jsx.umd.js',
+      file: 'dist/tiny-jsx.js',
       format: 'iife',
-      sourcemap: true,
+      sourcemap: !production && 'inline',
       target: 'web',
       exports: 'named',
     },
@@ -36,9 +36,9 @@ export default [
     external: ['..'],
     output: {
       name: 'TinyDOM',
-      file: 'dist/tiny-jsx-dom.umd.js',
+      file: 'dist/tiny-jsx-dom.js',
       format: 'iife',
-      sourcemap: true,
+      sourcemap: !production && 'inline',
       exports: 'named',
       target: 'web',
       globals: {
@@ -50,17 +50,12 @@ export default [
   {
     input: 'src/emitter/index.js',
     output: [
-      { dir: 'dist/emitter', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/emitter', format: 'esm', exports: 'named', entryFileNames: '[name].esm.js', target: 'node' },
+      { dir: 'dist/cjs/emitter', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/emitter', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
       commonjs(),
-      copy({
-        targets: {
-          'src/emitter/package.json': 'dist/emitter/package.json',
-        }
-      }),
       analyze(),
     ]
   },
@@ -68,32 +63,28 @@ export default [
     input: 'src/dom/index.js',
     external: ['..'],
     output: [
-      { dir: 'dist/dom', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/dom', format: 'esm', exports: 'named', entryFileNames: '[name].esm.js', target: 'node' },
+      { dir: 'dist/cjs/dom', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/dom', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
       commonjs(),
-      analyze(),
-      copy({
-        targets: {
-          'src/dom/package.json': 'dist/dom/package.json',
-        }
-      }),
+      analyze()
     ]
   },
   {
     input: 'src/index.js',
     external: ['./emitter'],
     output: [
-      { dir: 'dist', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist', format: 'esm', exports: 'named', entryFileNames: '[name].esm.js', target: 'node' },
+      { dir: 'dist/cjs', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
       commonjs(),
       copy({
         targets: {
+          'README.md': 'dist/README.md',
           'src/package.json': 'dist/package.json',
         }
       }),

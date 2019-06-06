@@ -25,10 +25,11 @@ module.exports = {
   },
   resolve: {
     extensions: [".js", ".jsx", ".scss"],
-    mainFields: ['module', 'main', 'browser'],
+    /* NOTE: Uncomment this when making changes to the library files to use the local build
     alias: {
       'tiny-jsx': path.resolve(__dirname, './dist/'),
     }
+    */
   },
   module: {
     rules: [
@@ -59,10 +60,10 @@ module.exports = {
       name: false,
       automaticNameDelimiter: '.',
       cacheGroups: {
-        TinyJSX: {
+        tiny: {
           name: 'tiny-jsx',
           chunks: 'initial',
-          test: /[\\/]dist[\\/]/,
+          test: /[\\/](dist|tiny-jsx)[\\/]/,
           priority: -10,
         },
         vendor: {

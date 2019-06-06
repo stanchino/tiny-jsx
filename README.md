@@ -5,7 +5,7 @@ TinyJSX is a lightweight UI JavaScript library for developing user interfaces us
 ---
 
 ## Usage
-TinyJSX exposes an API which mimics the recent React Hooks implementation but is lightweight (1.1KB gzipped) and fast.
+TinyJSX exposes an API which mimics the recent React Hooks implementation but is lightweight (1.34KB gzipped) and fast.
 
 > TinyJSX supports **only** functional components
  

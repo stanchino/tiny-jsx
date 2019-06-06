@@ -1,6 +1,6 @@
 {
   "name": "tiny-jsx",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -23,7 +23,6 @@
     "dev:server": "webpack-dev-server",
     "dev": "run-p watch dev:server",
     "serve": "yarn build && NODE_ENV=production webpack --mode production && NODE_ENV=production static -z -p 5000 build",
-    "pub": "cd dist && npm publish"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",

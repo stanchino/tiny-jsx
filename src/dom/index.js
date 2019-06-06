@@ -1,4 +1,4 @@
-import emitter from '../tiny-jsx-emitter';
+import { emitter } from '..';
 
 emitter.on('render', function(vNode) {
   render(vNode, vNode.__parentDOMNode, vNode.__DOMNode);

@@ -1,0 +1,21 @@
+{
+  "name": "tiny-jsx-dom",
+  "version": "1.0.1",
+  "license": "MIT",
+  "author": {
+    "name": "Stanimir Dimitrov",
+    "email": "stanchino@gmail.com"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/stanchino/tiny-jsx.git"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "main": "index.js",
+  "source": "index.js",
+  "module": "index.esm.js",
+  "browser": "../tiny-jsx-dom.umd.js",
+  "types": "index.d.ts"
+}

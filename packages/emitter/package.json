@@ -1,0 +1,20 @@
+{
+  "name": "tiny-jsx-emitter",
+  "version": "1.0.8",
+  "license": "MIT",
+  "author": {
+    "name": "Stanimir Dimitrov",
+    "email": "stanchino@gmail.com"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/stanchino/tiny-jsx.git"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "main": "index",
+  "source": "index.js",
+  "module": "index.js",
+  "types": "index.d.ts"
+}

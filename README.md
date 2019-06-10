@@ -5,19 +5,21 @@ TinyJSX is a lightweight UI JavaScript library for developing user interfaces us
 ---
 
 ## Usage
-TinyJSX exposes an API which mimics the recent React Hooks implementation but is lightweight (1.34KB gzipped) and fast.
+TinyJSX exposes an API which mimics the recent React Hooks implementation but is really small.
 
-> TinyJSX supports **only** functional components
+> TinyJSX supports **only** functional components.
  
 ```jsx
-import TinyJSX, { useEffect, useState } from 'tiny-jsx';
+import TinyJSX from 'tiny-jsx';
 import { render } from 'tiny-jsx/dom';
+import useEffect from 'tiny-jsx/hooks/useEffect';
+import useState from 'tiny-jsx/hooks/useState';
 
 function Clock () {
   const [tick, setTick] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
-      setCounter(tick => tick + 1);
+      setTick(tick + 1);
     }, 1000);
     return () => clearInterval(interval);
   }, [tick]);
@@ -28,6 +30,12 @@ function Clock () {
 }
 
 render(<Clock />, document.body);
+```
+
+> For smaller bundle sizes all hooks are exported on their own. You can still import the hooks from the above example
+like this:
+```jsx
+import { useState, useEffect } from 'tiny-jsx/hooks';
 ```
 
 ## Getting Started
@@ -42,8 +50,10 @@ $ npm install --save tiny-jsx
 ```
 or in the browser
 ```html
-<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx/tiny-jsx.js" />
-<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx/tiny-jsx-dom.js" />
+<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx/tiny-jsx.min.js" />
+<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx/tiny-jsx-hooks.min.js" />
+<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx/tiny-jsx-dom.min.js" />
+
 ```
 
 ### Import

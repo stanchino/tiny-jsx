@@ -13,7 +13,6 @@ module.exports = {
     ],
   ],
   plugins: [
-    '@babel/plugin-proposal-object-rest-spread',
     ['@babel/plugin-transform-react-jsx', { pragma: 'TinyJSX.createElement', pragmaFrag: 'TinyJSX.Fragment' }],
   ].filter(Boolean),
 };

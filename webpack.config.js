@@ -21,15 +21,15 @@ module.exports = {
     contentBase: path.resolve(__dirname, 'public'),
   },
   entry: {
-    app: './src/examples/index.jsx',
+    clock: './examples/clock/index.jsx',
+    todos: './examples/todos/index.jsx',
   },
   resolve: {
     extensions: [".js", ".jsx", ".scss"],
-    /* NOTE: Uncomment this when making changes to the library files to use the local build
+    /* NOTE: Uncomment this when making changes to the library files to use the local build */
     alias: {
       'tiny-jsx': path.resolve(__dirname, './dist/'),
     }
-    */
   },
   module: {
     rules: [
@@ -63,7 +63,7 @@ module.exports = {
         tiny: {
           name: 'tiny-jsx',
           chunks: 'initial',
-          test: /[\\/](dist|tiny-jsx)[\\/]/,
+          test: /[\\/]dist[\\/]/,
           priority: -10,
         },
         vendor: {
@@ -82,7 +82,14 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      filename: 'clock.html',
+      excludeChunks: ['todos'],
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'todos.html',
+      excludeChunks: ['clock'],
+    }),
     new CompressionPlugin(),
     production && new webpack.HashedModuleIdsPlugin(),
     production && new BundleAnalyzerPlugin({ analyzerMode: 'static', reportFilename: path.join(DIST_PATH, 'report.html') }),

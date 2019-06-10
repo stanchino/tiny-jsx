@@ -126,11 +126,12 @@ plugin and add it to the configuration file:
 
 ### Rendering
 The TinyJSX transpile function converts JSX components into Virtual DOM elements 
-_([here's how](http://jasonformat.com/wtf-is-jsx))_. In order to render the Virtual DOM elements in a browser, TinyJSX
-provides a `render()` function that creates the corresponding DOM tree and renders it to an element from the existing DOM tree.
+_([as describe here](http://jasonformat.com/wtf-is-jsx))_. In order to render the Virtual DOM elements in a browser, TinyJSX
+provides a `render()` function that creates the corresponding DOM tree and renders it into an element from the existing DOM tree.
 
 ```jsx
-import TinyJSX, { render } from 'tiny-jsx';
+import TinyJSX from 'tiny-jsx';
+import { render } from 'tiny-jsx/dom'; 
 
 render(<div>Hello World!</div>, document.body);
 ```

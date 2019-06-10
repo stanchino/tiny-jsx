@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8"/>
+    <title>TinyJSX Clock Example</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=yes" />
+    <script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.9/tiny-jsx.min.js"></script>
+    <script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.9/tiny-jsx-hooks.min.js"></script>
+    <script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.9/tiny-jsx-dom.min.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+  document.onreadystatechange = function () {
+    if (document.readyState === 'complete') {
+
+      const { createElement, Fragment } = TinyJSX;
+      const { render } = TinyJSXDom;
+      const { useState, useMemo } = TinyJSXHooks;
+
+      function TodoList ({ todos: defaultTodos }) {
+        const [text, setText] = useState('');
+        const [todos, setTodos] = useState(defaultTodos);
+
+        const addTodo = useMemo(function () {
+          return function (event) {
+            event.preventDefault();
+            setTodos(function (prev) {
+              return [].concat([text], prev);
+            });
+            setText('');
+          }
+        }, [text]);
+
+        const removeTodo = useMemo(function() {
+          return function(key) {
+            return function(event) {
+              event.preventDefault();
+              setTodos(todos.slice(0, key).concat(todos.slice(key + 1)));
+            }
+          }
+        }, [todos]);
+
+        const changeText = useMemo(function() {
+          return function (event) {
+            setText(event.target.value);
+          }
+        }, [setText]);
+
+        return Fragment({
+          children: [
+            createElement('form', { onSubmit: addTodo }, [
+              createElement('input',  { type:  'text', value: text, onInput: changeText }),
+              createElement('button',  { type: 'submit' }, 'Add'),
+            ]),
+            createElement('ul', {}, todos.map(function(todo, key) {
+              return createElement('li', {}, [
+                todo,
+                createElement('button', { type: 'button', onClick: removeTodo(key) }, 'Remove'),
+              ])
+            })),
+          ]
+        });
+      }
+
+      render(createElement(TodoList, { todos: ['a', 'b', 'c'] }), document.body);
+    }
+  }
+</script>
+</body>
+</html>

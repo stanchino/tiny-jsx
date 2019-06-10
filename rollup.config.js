@@ -53,7 +53,7 @@ export default [
       exports: 'named',
       target: 'web',
       globals: {
-        '..': 'TinyJSX.emitter',
+        '..': 'TinyJSX',
       },
     },
     plugins,
@@ -69,7 +69,7 @@ export default [
       exports: 'named',
       target: 'web',
       globals: {
-        '..': 'TinyJSX.emitter',
+        '..': 'TinyJSX',
       },
     },
     plugins: [
@@ -89,7 +89,7 @@ export default [
       exports: 'named',
       target: 'web',
       globals: {
-        '..': 'TinyJSX.emitter',
+        '..': 'TinyJSX',
       },
     },
     plugins,
@@ -105,7 +105,7 @@ export default [
       exports: 'named',
       target: 'web',
       globals: {
-        '..': 'TinyJSX.emitter',
+        '..': 'TinyJSX',
       },
     },
     plugins: [

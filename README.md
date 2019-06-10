@@ -38,6 +38,13 @@ like this:
 import { useState, useEffect } from 'tiny-jsx/hooks';
 ```
 
+## Examples
+Some simple examples can be found in the [examples](./examples) directory. You can also see the library in action
+using the UMD builds here:
+
+* [Clock](./examples/clock-umd/index.html)
+* [ToDos](./examples/todos-umd/index.html)
+
 ## Getting Started
 
 ### Install

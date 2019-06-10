@@ -22,11 +22,10 @@ function TodoList ({ todos: defaultTodos }) {
     setText(event.target.value);
   }, [setText]);
 
-  console.log(todos);
   return (
     <>
       <form onSubmit={addTodo}>
-        <input value={text} onInput={changeText} />
+        <input type="text" value={text} onInput={changeText} />
         <button type="submit">Add</button>
       </form>
       <ul>

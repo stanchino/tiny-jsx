@@ -9,24 +9,24 @@ TinyJSX is a lightweight UI JavaScript library for developing user interfaces us
 
 GZip packages sizes
 
-[![tiny-jsx.min.js.gz](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx/tiny-jsx.min.js.gz?label=tiny-jsx
+[![tiny-jsx.min.js.gz](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx@1.0.12/tiny-jsx.min.js.gz?label=tiny-jsx
 )](https://unpkg.com/tiny-jsx/tiny-jsx.min.js.gz)
-[![tiny-jsx-hooks.min.js.gz](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx/tiny-jsx-hooks.min.js.gz?label=tiny-jsx-hooks
+[![tiny-jsx-hooks.min.js.gz](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx@1.0.12/tiny-jsx-hooks.min.js.gz?label=tiny-jsx-hooks
 )](https://unpkg.com/tiny-jsx/tiny-jsx-hooks.min.js.gz)
-[![tiny-jsx-dom.min.js.gz](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx/tiny-jsx-dom.min.js.gz?label=tiny-jsx-dom
+[![tiny-jsx-dom.min.js.gz](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx@1.0.12/tiny-jsx-dom.min.js.gz?label=tiny-jsx-dom
 )](https://unpkg.com/tiny-jsx/tiny-jsx-dom.min.js.gz)
-[![tiny-jsx-router.min.js.gz](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx/tiny-jsx-router.min.js.gz?label=tiny-jsx-router
+[![tiny-jsx-router.min.js.gz](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx@1.0.12/tiny-jsx-router.min.js.gz?label=tiny-jsx-router
 )](https://unpkg.com/tiny-jsx/tiny-jsx-router.min.js.gz)
 
 Brotli packages sizes
 
-[![tiny-jsx.min.js.br](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx/tiny-jsx.min.js.br?label=tiny-jsx
+[![tiny-jsx.min.js.br](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx@1.0.12/tiny-jsx.min.js.br?label=tiny-jsx
 )](https://unpkg.com/tiny-jsx/tiny-jsx.min.js.br)
-[![tiny-jsx-hooks.min.js.br](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx/tiny-jsx-hooks.min.js.br?label=tiny-jsx-hooks
+[![tiny-jsx-hooks.min.js.br](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx@1.0.12/tiny-jsx-hooks.min.js.br?label=tiny-jsx-hooks
 )](https://unpkg.com/tiny-jsx/tiny-jsx-hooks.min.js.br)
-[![tiny-jsx-dom.min.js.br](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx/tiny-jsx-dom.min.js.br?label=tiny-jsx-dom
+[![tiny-jsx-dom.min.js.br](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx@1.0.12/tiny-jsx-dom.min.js.br?label=tiny-jsx-dom
 )](https://unpkg.com/tiny-jsx/tiny-jsx-dom.min.js.br)
-[![tiny-jsx-router.min.js.br](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx/tiny-jsx-router.min.js.br?label=tiny-jsx-router
+[![tiny-jsx-router.min.js.br](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx@1.0.12/tiny-jsx-router.min.js.br?label=tiny-jsx-router
 )](https://unpkg.com/tiny-jsx/tiny-jsx-router.min.js.br)
 
 ---

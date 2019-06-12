@@ -77,7 +77,6 @@ export default [
       terser(),
     ],
   },
-
   {
     input: 'packages/hooks/index.js',
     external: ['..'],
@@ -100,6 +99,41 @@ export default [
     output: {
       name: 'TinyJSXHooks',
       file: 'dist/tiny-jsx-hooks.min.js',
+      format: 'iife',
+      sourcemap: false,
+      exports: 'named',
+      target: 'web',
+      globals: {
+        '..': 'TinyJSX',
+      },
+    },
+    plugins: [
+      ...plugins,
+      terser(),
+    ],
+  },
+  {
+    input: 'packages/router/index.js',
+    external: ['..'],
+    output: {
+      name: 'TinyJSXRouter',
+      file: 'dist/tiny-jsx-router.dev.js',
+      format: 'iife',
+      sourcemap: 'inline',
+      exports: 'named',
+      target: 'web',
+      globals: {
+        '..': 'TinyJSX',
+      },
+    },
+    plugins,
+  },
+  {
+    input: 'packages/router/index.js',
+    external: ['..'],
+    output: {
+      name: 'TinyJSXRouter',
+      file: 'dist/tiny-jsx-router.min.js',
       format: 'iife',
       sourcemap: false,
       exports: 'named',
@@ -295,8 +329,21 @@ export default [
     ]
   },
   {
+    input: 'packages/router/index.js',
+    external: ['..', '../hooks/useEffect', '../hooks/useMemo', '../hooks/useState'],
+    output: [
+      { dir: 'dist/cjs/router', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/router', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+    ],
+    plugins: [
+      resolve(),
+      commonjs(),
+      analyze(),
+    ]
+  },
+  {
     input: 'packages/index.js',
-    external: ['./emitter', '../emitter', './hooks'],
+    external: ['../emitter', './emitter'],
     output: [
       { dir: 'dist/cjs', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
       { dir: 'dist', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },

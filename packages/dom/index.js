@@ -25,15 +25,10 @@ function eventProxy(DOMNode) {
   }
 }
 
-function setProperty(DOMNode, name, value, oldValue, isSvg) {
-  name = name === 'className' ? 'class' : name;
-
-  if ( name === 'style') {
-    const set = Object.assign(Object.assign({}, oldValue), value);
-    for (let i in set) {
-      if ((value || {})[i] === (oldValue || {})[i]) {
-        continue;
-      }
+function setStyle(DOMNode, value = {}, oldValue = {}) {
+  const set = Object.assign(Object.assign({}, oldValue), value);
+  for (let i in set) {
+    if (set.hasOwnProperty(i) && value[i] !== oldValue[i]) {
       DOMNode.style.setProperty(
         (i[0] === '-' && i[1] === '-') ? i : i.replace(/[A-Z]/g, '-$&'),
         (value && (i in value))
@@ -43,55 +38,123 @@ function setProperty(DOMNode, name, value, oldValue, isSvg) {
           : ''
       );
     }
-  } else if (name[0]==='o' && name[1]==='n') {
-    const useCapture = name !== (name=name.replace(/Capture$/, ''));
-    const nameLower = name.toLowerCase();
-    name = (nameLower in DOMNode ? nameLower : name).slice(2);
-    if (value) {
-      if (!oldValue) {
-        DOMNode.addEventListener(name, eventProxy(DOMNode), useCapture);
-      }
+  }
+}
+
+function setEvent(DOMNode, name, value, oldValue) {
+  const useCapture = name !== (name = name.replace(/Capture$/, ''));
+  const nameLower = name.toLowerCase();
+  name = (nameLower in DOMNode ? nameLower : name).slice(2);
+  if (value && !oldValue) {
+    DOMNode.addEventListener(name, eventProxy(DOMNode), useCapture);
+  } else if (!value) {
+    DOMNode.removeEventListener(name, eventProxy(DOMNode), useCapture);
+  }
+  (DOMNode.__listeners || (DOMNode.__listeners = {}))[name] = value;
+}
+
+function setAttribute(DOMNode, name, value) {
+  if (name !== (name = name.replace(/^xlink:?/, ''))) {
+    if (value == null || value === false) {
+      DOMNode.removeAttributeNS(XLINK_NS, name.toLowerCase());
     } else {
-      DOMNode.removeEventListener(name, eventProxy(DOMNode), useCapture);
+      DOMNode.setAttributeNS(XLINK_NS, name.toLowerCase(), value);
     }
-    (DOMNode.__listeners || (DOMNode.__listeners = {}))[name] = value;
+  } else if (value == null || value === false) {
+    DOMNode.removeAttribute(name);
+  } else {
+    DOMNode.setAttribute(name, value);
+  }
+}
+
+function setProperty(name, vNode, oldValue) {
+  const DOMNode = vNode.__DOMNode;
+  const value = vNode.props[name];
+  const isSvg = vNode.type === 'svg';
+  name = name === 'className' ? 'class' : name;
+
+  if ( name === 'style') {
+    setStyle(DOMNode, value, oldValue);
+  } else if (name[0] === 'o' && name[1] === 'n') {
+    setEvent(DOMNode, name, value, oldValue);
   } else if (name !== 'list' && name !== 'tagName' && !isSvg && (name in DOMNode)) {
     DOMNode[name] = value == null ? '' : value;
-  } else if (typeof value !== 'function' && name !== 'dangerouslySetInnerHTML') {
-    if (name !== (name = name.replace(/^xlink:?/, ''))) {
-      if (value == null || value === false) {
-        DOMNode.removeAttributeNS(XLINK_NS, name.toLowerCase());
-      } else {
-        DOMNode.setAttributeNS(XLINK_NS, name.toLowerCase(), value);
+  } else if (typeof value !== 'function' && name !== 'dangerouslySetInnerHTML' && (name in DOMNode)) {
+    setAttribute(DOMNode, name, value);
+  }
+}
+
+function setRef(vNode) {
+  if (typeof vNode.props.ref === 'function') {
+    vNode.props.ref(vNode.__DOMNode);
+  } else if (typeof vNode.props.ref === 'object') {
+    vNode.props.ref.current = vNode.__DOMNode;
+  }
+}
+
+function setProperties(vNode, oldProps = {}) {
+  for (let key in vNode.props) {
+    if (vNode.props.hasOwnProperty(key)) {
+      if (key !== 'children' && key !== 'key' && key !== 'ref' && key !== 'route') {
+        setProperty(key, vNode, oldProps[key]);
       }
-    } else if (value == null || value === false) {
-      DOMNode.removeAttribute(name);
-    } else {
-      DOMNode.setAttribute(name, value);
+    }
+  }
+}
+
+function renderChildren(vNode, oldChildren) {
+  if (vNode.props.children.length === 0) return;
+  for (let i in vNode.props.children) {
+    render(vNode.props.children[i], vNode.__DOMNode, oldChildren[i]);
+  }
+}
+
+function removeChildren(vNode, oldChildren) {
+  if (oldChildren.length <= vNode.props.children.length) return;
+  for (let i = vNode.props.children.length; i < oldChildren.length; i++) {
+    if (oldChildren[i].__DOMNode && vNode.__DOMNode !== oldChildren[i].__DOMNode && vNode.__DOMNode.contains(oldChildren[i].__DOMNode)) {
+      vNode.__DOMNode.removeChild(oldChildren[i].__DOMNode);
+    }
+  }
+}
+
+function removeNode(vNode, parentDOMNode) {
+  if (vNode.__DOMNode) {
+    for (let i in vNode.props.children) {
+      if (vNode.props.children[i].__DOMNode) {
+        removeNode(vNode.props.children[i], vNode.__DOMNode);
+      }
+    }
+    if (parentDOMNode && parentDOMNode !== vNode.__DOMNode && parentDOMNode.contains(vNode.__DOMNode)) {
+      parentDOMNode.removeChild(vNode.__DOMNode);
+    }
+    delete vNode.__DOMNode;
+    if (vNode.props.reset) {
+      vNode.__effectsQueued = false;
+      vNode.__effects = [];
+      vNode.__hooks = [];
     }
   }
 }
 
 export function render(vNode, parentDOMNode, oldNode = {}) {
-  if (!parentDOMNode && !vNode.__DOMNode && !oldNode.__DOMNode) {
-    throw new Error('Missing parent DOM element.');
-  }
+  if (!parentDOMNode && !vNode.__DOMNode && !oldNode.__DOMNode) return;
 
-  const oldProps = oldNode.props || Object.assign({}, vNode.props);
-  const oldChildren = oldProps.children || [];
-  if (vNode.type === 'fragment' && typeof vNode.__callback === 'function') {
-    vNode.__callback();
-  }
+  if (!vNode) return oldNode && removeNode(oldNode, parentDOMNode);
+  if (vNode.props.remove) return removeNode(vNode, parentDOMNode);
 
-  let draw = false;
+  const oldProps = Object.assign({}, oldNode.props || vNode.props);
+  if (vNode.type === 'fragment' && typeof vNode.__callback === 'function') vNode.__callback();
+
   let exists = false;
+  let rerender = false;
   if (!vNode.__DOMNode && !oldNode.__DOMNode) {
-    draw = true;
+    rerender = true;
     if (vNode.type === 'text') {
       vNode.__DOMNode = document.createTextNode(String(vNode.__value));
     } else if (vNode.type === 'fragment') {
       vNode.__DOMNode = parentDOMNode;
-      draw = false;
+      rerender = false;
     } else if (!vNode.__DOMNode && typeof vNode.type === 'string') {
       vNode.__DOMNode = document.createElement(vNode.type);
     } else if (!vNode.__DOMNode) {
@@ -99,41 +162,23 @@ export function render(vNode, parentDOMNode, oldNode = {}) {
     }
   } else {
     exists = true;
+    rerender = propsChanged(vNode, oldNode);
     if (oldNode.__DOMNode) vNode.__DOMNode = oldNode.__DOMNode;
-    draw = propsChanged(vNode, oldNode);
   }
 
-  if (exists && draw && vNode.type === 'text') {
+  if (exists && rerender && vNode.type === 'text') {
     vNode.__DOMNode.nodeValue = vNode.__value;
-  } else if (!exists && draw) {
+  } else if (!exists && rerender) {
     parentDOMNode.appendChild(vNode.__DOMNode);
   }
 
-  if (draw) {
-    const ref = vNode.props.ref;
-    if (typeof ref === 'function') {
-      ref(vNode.__DOMNode);
-    } else if (typeof ref === 'object') {
-      ref.current = vNode.__DOMNode;
-    }
-
-    for (let key in vNode.props) {
-      if (key !== 'children' && key !== 'key' && key !== 'ref') {
-        setProperty(vNode.__DOMNode, key, vNode.props[key], exists && oldProps[key], vNode.type === 'svg');
-      }
-    }
+  if (rerender) {
+    !exists && setRef(vNode);
+    setProperties(vNode, exists && oldProps);
   }
 
   if (vNode.props.children) {
-    if (vNode.props.children.length > 0) {
-      for (let i in vNode.props.children) {
-        render(vNode.props.children[i], vNode.__DOMNode, oldChildren[i]);
-      }
-    }
-    if (oldChildren.length > vNode.props.children.length) {
-      for (let i = vNode.props.children.length; i < oldChildren.length; i++) {
-        vNode.__DOMNode.removeChild(oldChildren[i].__DOMNode);
-      }
-    }
+    renderChildren(vNode, oldProps.children || []);
+    removeChildren(vNode, oldProps.children || []);
   }
 }

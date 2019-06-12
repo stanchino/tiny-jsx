@@ -25,14 +25,12 @@ function flushEffects() {
   pendingEffects = [];
 }
 
-function scheduleFlushAfterPaint() {
-  setTimeout(flushEffects);
-}
-
 function afterRender (vNode) {
   if (!vNode.__effectsQueued && (vNode.__effectsQueued = true) && pendingEffects.push(vNode) === 1) {
     if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
-      window.requestAnimationFrame(scheduleFlushAfterPaint);
+      window.requestAnimationFrame(flushEffects);
+    } else {
+      setTimeout(flushEffects);
     }
   }
 }

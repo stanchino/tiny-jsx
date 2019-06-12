@@ -25,14 +25,16 @@ export function createElement(type, props, children) {
   }
 
   if (typeof type === 'function') {
-    const fragment = { type: 'fragment', props: {}, __effects: [], __hooks: [] };
+    const fragment = { type: 'fragment', props, __effects: [], __hooks: [] };
     fragment.__callback = function () {
       emitter.emit('construct', fragment);
       const vNode = type(props);
-      if (Array.isArray(vNode)) {
+      if (vNode === null) {
+        fragment.props.children = [];
+      } else if (Array.isArray(vNode)) {
         fragment.props.children = vNode;
       } else if (typeof vNode === 'object' && vNode.type === 'fragment') {
-        fragment.props = vNode.props;
+        fragment.props = Object.assign({}, props, vNode.props);
         fragment.__effectsQueued = vNode.__effectsQueued;
         fragment.__effects = [].concat((fragment.__effects || []), (vNode.__effects || []));
         fragment.__hooks = [].concat((fragment.__hooks || []), (vNode.__hooks || []));
@@ -40,7 +42,6 @@ export function createElement(type, props, children) {
         fragment.props.children = [vNode];
       }
     };
-    fragment.__callback();
     return fragment;
   }
 

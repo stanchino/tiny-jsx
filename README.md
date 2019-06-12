@@ -44,6 +44,7 @@ using the UMD builds here:
 
 * [Clock](./examples/clock-umd/index.html)
 * [ToDos](./examples/todos-umd/index.html)
+* [Router](./examples/router-umd/)
 
 ## Getting Started
 
@@ -57,9 +58,10 @@ $ npm install --save tiny-jsx
 ```
 or in the browser
 ```html
-<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx/tiny-jsx.min.js" />
-<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx/tiny-jsx-hooks.min.js" />
-<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx/tiny-jsx-dom.min.js" />
+<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.11/tiny-jsx.min.js" />
+<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.11/tiny-jsx-hooks.min.js" />
+<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.11/tiny-jsx-dom.min.js" />
+<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.11/tiny-jsx-router.min.js" />
 
 ```
 

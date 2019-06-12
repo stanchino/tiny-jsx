@@ -1,18 +1,17 @@
-function Emitter (all) {
-  all = all || Object.create(null);
+function Emitter () {
+  const events = Object.create(null);
 
   return {
     on(type, handler) {
-      (all[type] || (all[type] = [])).push(handler);
+      (events[type] || (events[type] = [])).push(handler);
     },
     off(type, handler) {
-      if (all[type]) {
-        all[type].splice(all[type].indexOf(handler) >>> 0, 1);
+      if (events[type]) {
+        events[type].splice(events[type].indexOf(handler) >>> 0, 1);
       }
     },
     emit(type, evt) {
-      (all[type] || []).slice().map((handler) => { handler(evt); });
-      (all['*'] || []).slice().map((handler) => { handler(type, evt); });
+      (events[type] || []).slice().map(handler => { handler(evt); });
     }
   };
 }

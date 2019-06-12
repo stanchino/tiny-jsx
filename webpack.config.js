@@ -21,6 +21,7 @@ module.exports = {
     contentBase: path.resolve(__dirname, 'public'),
   },
   entry: {
+    router: './examples/router/index.jsx',
     clock: './examples/clock/index.jsx',
     todos: './examples/todos/index.jsx',
   },
@@ -84,11 +85,15 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       filename: 'clock.html',
-      excludeChunks: ['todos'],
+      excludeChunks: ['todos', 'router'],
     }),
     new HtmlWebpackPlugin({
       filename: 'todos.html',
-      excludeChunks: ['clock'],
+      excludeChunks: ['clock', 'router'],
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'routes/index.html',
+      excludeChunks: ['clock', 'todos'],
     }),
     new CompressionPlugin(),
     production && new webpack.HashedModuleIdsPlugin(),

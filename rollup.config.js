@@ -1,3 +1,4 @@
+import { compress } from 'brotli';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
@@ -11,6 +12,10 @@ const plugins = [
   }),
   commonjs(),
   gzipPlugin(),
+  gzipPlugin({
+    customCompression: content => compress(Buffer.from(content)),
+    fileName: '.br',
+  }),
   analyze(),
 ];
 

@@ -357,10 +357,10 @@ export default [
       resolve(),
       commonjs(),
       copy({
-        targets: {
-          'README.md': 'dist/README.md',
-          'packages/core/package.json': 'dist/package.json',
-        }
+        targets: [
+          { src: 'README.md', dest: 'dist/' },
+          { src: 'packages/core/package.json', dest: 'dist/' },
+        ]
       }),
       analyze(),
     ]

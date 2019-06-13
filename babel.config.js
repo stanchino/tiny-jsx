@@ -1,12 +1,10 @@
 module.exports = {
   presets: [
-    '@babel/preset-react',
     [
       '@babel/preset-env',
       {
         loose: false,
         useBuiltIns: 'entry',
-        corejs: 3,
         modules: false,
         targets: { browsers: ['> 0.25%, not dead', 'IE >= 9'] },
       },
@@ -14,5 +12,5 @@ module.exports = {
   ],
   plugins: [
     ['@babel/plugin-transform-react-jsx', { pragma: 'TinyJSX.createElement', pragmaFrag: 'TinyJSX.Fragment' }],
-  ].filter(Boolean),
+  ],
 };

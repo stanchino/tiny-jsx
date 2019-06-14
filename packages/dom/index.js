@@ -95,7 +95,7 @@ function setRef(vNode) {
 function setProperties(vNode, oldProps = {}) {
   for (let key in vNode.props) {
     if (vNode.props.hasOwnProperty(key)) {
-      if (key !== 'children' && key !== 'key' && key !== 'ref' && key !== 'route') {
+      if (key !== 'children' && key !== 'key' && key !== 'ref' && key !== 'path') {
         setProperty(key, vNode, oldProps[key]);
       }
     }
@@ -105,7 +105,9 @@ function setProperties(vNode, oldProps = {}) {
 function renderChildren(vNode, oldChildren) {
   if (vNode.props.children.length === 0) return;
   for (let i in vNode.props.children) {
-    render(vNode.props.children[i], vNode.__DOMNode, oldChildren[i]);
+    if (vNode.props.children.hasOwnProperty(i)) {
+      render(vNode.props.children[i], vNode.__DOMNode, oldChildren[i]);
+    }
   }
 }
 
@@ -129,7 +131,7 @@ function removeNode(vNode, parentDOMNode) {
       parentDOMNode.removeChild(vNode.__DOMNode);
     }
     delete vNode.__DOMNode;
-    if (vNode.props.reset) {
+    if (vNode.props.resetState) {
       vNode.__effectsQueued = false;
       vNode.__effects = [];
       vNode.__hooks = [];
@@ -141,29 +143,25 @@ export function render(vNode, parentDOMNode, oldNode = {}) {
   if (!parentDOMNode && !vNode.__DOMNode && !oldNode.__DOMNode) return;
 
   if (!vNode) return oldNode && removeNode(oldNode, parentDOMNode);
-  if (vNode.props.remove) return removeNode(vNode, parentDOMNode);
+  if (vNode.__remove) return removeNode(vNode, parentDOMNode);
 
   const oldProps = Object.assign({}, oldNode.props || vNode.props);
-  if (vNode.type === 'fragment' && typeof vNode.__callback === 'function') vNode.__callback();
+  if (vNode.type === 'function' && typeof vNode.__callback === 'function') vNode.__callback();
 
-  let exists = false;
-  let rerender = false;
-  if (!vNode.__DOMNode && !oldNode.__DOMNode) {
-    rerender = true;
+  let exists = vNode.__DOMNode || oldNode.__DOMNode;
+  let rerender = exists ? propsChanged(vNode, oldNode) : vNode.type !== 'fragment' && vNode.type !== 'function';
+  if (exists && oldNode.__DOMNode) {
+    vNode.__DOMNode = oldNode.__DOMNode;
+  } else if (!exists) {
     if (vNode.type === 'text') {
       vNode.__DOMNode = document.createTextNode(String(vNode.__value));
-    } else if (vNode.type === 'fragment') {
+    } else if (vNode.type === 'fragment' || vNode.type === 'function') {
       vNode.__DOMNode = parentDOMNode;
-      rerender = false;
     } else if (!vNode.__DOMNode && typeof vNode.type === 'string') {
       vNode.__DOMNode = document.createElement(vNode.type);
     } else if (!vNode.__DOMNode) {
       throw new Error(`Unknown Virtual DOM node type ${vNode.type}`);
     }
-  } else {
-    exists = true;
-    rerender = propsChanged(vNode, oldNode);
-    if (oldNode.__DOMNode) vNode.__DOMNode = oldNode.__DOMNode;
   }
 
   if (exists && rerender && vNode.type === 'text') {
@@ -179,6 +177,13 @@ export function render(vNode, parentDOMNode, oldNode = {}) {
 
   if (vNode.props.children) {
     renderChildren(vNode, oldProps.children || []);
-    removeChildren(vNode, oldProps.children || []);
+    removeChildren(vNode,oldProps.children || []);
   }
 }
+
+export const createPortal = render;
+
+export default {
+  createPortal,
+  render,
+};

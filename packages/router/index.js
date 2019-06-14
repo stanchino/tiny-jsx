@@ -1,7 +1,29 @@
-import { emitter, createElement } from '..';
+import { emitter, createElement, createContext } from '..';
+export { Fragment as Switch } from '..';
 
 import useEffect from '../hooks/useEffect';
 import useState from '../hooks/useState';
+
+const ctx = createContext();
+
+function matchPath(path, url) {
+  if (typeof path === 'undefined' || typeof url === 'undefined') return [false, []];
+  if (typeof path === 'string') return [path === url, []];
+  if (typeof path === 'object' && typeof path.exec === 'function') {
+    const matches = path.exec(url);
+    if (!matches) return [false, []];
+    return [true, matches.slice(1, matches.length)];
+  }
+  if (Array.isArray(path)) {
+    let [match, matches] = [false, []];
+    path.some(p => {
+      [match, matches] = matchPath(p, url);
+      return match;
+    });
+    return [match, matches];
+  }
+  throw new Error(`Unsupported path type ${path}`);
+}
 
 function goto (url, history, type = 'push') {
   if (history && typeof history[type] === 'function') {
@@ -42,17 +64,23 @@ export function Link ({ to: href, history, onClick: clickHandler, children }) {
   return createElement('a', { href, onClick: clickHandler || onClick }, children);
 }
 
-export function Route ({ render, component, children }) {
-  if (typeof render === 'function') return render();
-  if (typeof component !== 'undefined') {
-    const element = createElement(component, {});
-    element.__callback();
-    return element;
-  }
-  return children || [];
+export function Route ({ path, render, component, resetState, children }) {
+  return ctx.Consumer({
+    children: function (context) {
+      const [match, matches] = matchPath(path, context.url);
+      if (typeof render === 'function') return match && render({ matches, resetState });
+      if (typeof component !== 'undefined') return match && component({ matches, resetState });
+      return (children || []).map(function(child) {
+        child.__remove = !match;
+        child.props.match = { params: matches };
+        child.props.resetState = child.props.resetState || resetState;
+        return child;
+      });
+    }
+  });
 }
 
-export default function Routes ({ url: defaultUrl, history, children }) {
+export default function Router ({ url: defaultUrl, history, children }) {
   const [url, setUrl] = useState(defaultUrl || currentUrl(history));
 
   useEffect(function() {
@@ -60,10 +88,7 @@ export default function Routes ({ url: defaultUrl, history, children }) {
     return function () {
       emitter.off('nav', setUrl);
     }
-  }, [setUrl]);
+  }, [url, setUrl]);
 
-  return children.map(function(child) {
-    child.props.remove = child.props.route !== 'undefined' && child.props.route !== url;
-    return child;
-  });
+  return ctx.Provider({ value: { url }, children });
 }

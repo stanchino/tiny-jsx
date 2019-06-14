@@ -5,8 +5,9 @@ module.exports = {
       {
         loose: false,
         useBuiltIns: 'entry',
+        corejs: 3,
         modules: false,
-        targets: { browsers: ['> 0.25%, not dead', 'IE >= 9'] },
+        targets: { browsers: ['> 0.25%, not dead, ie >= 9'] },
       },
     ],
   ],

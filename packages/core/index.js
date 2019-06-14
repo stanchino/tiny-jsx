@@ -7,42 +7,30 @@ function convert(value) {
   return value;
 }
 
+function buildChildren(children) {
+  if (typeof children === 'undefined' || children === null) return [];
+  return Array.isArray(children) ? children.map(convert) : [convert(children)];
+}
+
 export function createElement(type, props, children) {
   props = Object.assign({}, props);
 
+  props.children = buildChildren(children);
   if (arguments.length > 3) {
-    children = [children];
     for (let i = 3; i < arguments.length; i++) {
-      children.push(arguments[i]);
-    }
-  }
-  if (typeof children !== 'undefined') {
-    if (Array.isArray(children)) {
-      props.children = children.map(convert);
-    } else {
-      props.children = [convert(children)];
+      props.children.push(convert(arguments[i]));
     }
   }
 
   if (typeof type === 'function') {
-    const fragment = { type: 'fragment', props, __effects: [], __hooks: [] };
-    fragment.__callback = function () {
-      emitter.emit('construct', fragment);
-      const vNode = type(props);
-      if (vNode === null) {
-        fragment.props.children = [];
-      } else if (Array.isArray(vNode)) {
-        fragment.props.children = vNode;
-      } else if (typeof vNode === 'object' && vNode.type === 'fragment') {
-        fragment.props = Object.assign({}, props, vNode.props);
-        fragment.__effectsQueued = vNode.__effectsQueued;
-        fragment.__effects = [].concat((fragment.__effects || []), (vNode.__effects || []));
-        fragment.__hooks = [].concat((fragment.__hooks || []), (vNode.__hooks || []));
-      } else {
-        fragment.props.children = [vNode];
-      }
+    const fn = { type: 'function', props, __effects: [], __hooks: [] };
+    fn.__callback = function () {
+      emitter.emit('construct', fn);
+      fn.props.children = buildChildren(type(props));
     };
-    return fragment;
+    return fn;
+  } else if (typeof type === 'object') {
+    return Object.assign({}, type, { props });
   }
 
   return { type, props };
@@ -52,14 +40,25 @@ export function createRef() {
   return {};
 }
 
-export function Fragment(props) {
+export function createContext() {
+  let ctx = {};
   return {
-    type: 'fragment',
-    props,
+    Consumer(props) {
+      return (Array.isArray(props.children) ? props.children[0] : props.children)(ctx);
+    },
+    Provider(props) {
+      ctx = props.value;
+      return props.children;
+    },
   };
 }
 
+export const Fragment = {
+  type: 'fragment',
+};
+
 export default {
   createElement,
+  createContext,
   Fragment,
 };

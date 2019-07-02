@@ -28,7 +28,7 @@ function Page() {
 
 function Routes() {
   return (
-    <>
+    <div>
       <nav>
         <Link to="/routes/">Home</Link>
         <Link to="/routes/#page1">Page 1</Link>
@@ -51,7 +51,7 @@ function Routes() {
         <Route path="/routes/#page1" render={() => (<div>Page 1</div>)} />
         <Route path="/routes/#page2" component={Page} />
       </Switch>
-    </>
+    </div>
   );
 }
 

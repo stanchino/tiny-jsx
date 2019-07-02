@@ -101,6 +101,7 @@ function flatten(vNode, depth = 0) {
       child.__index = i - empty + (vNode.type === 'fragment' ? vNode.__index : 0);
       child.__key = depth + '-' + child.__index;
       child.__parents = vNode.__parents.concat([vNode.__key]);
+      child.__parent = vNode;
       if (child.type === 'fragment') {
         child.__DOMNode = vNode.__DOMNode;
         child.__depth = depth;
@@ -173,7 +174,12 @@ function renderChildren(children, parentDOMNode, oldChildren, insertBefore = nul
 }
 
 function update(vNode) {
-  if (!vNode.__DOMNode || vNode.type !== 'fragment') throw new Error('error');
+  if (vNode.type !== 'fragment') throw new Error('error');
+  let parent = vNode.__parent;
+  while (!vNode.__DOMNode) {
+    vNode.__DOMNode = parent.__DOMNode;
+    parent = parent.__parent;
+  }
   mount(vNode);
   let firstIndex;
   let lastIndex;

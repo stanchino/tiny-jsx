@@ -27,7 +27,7 @@ function flushEffects() {
 
 function afterRender (vNode) {
   if (!vNode.__effectsQueued && (vNode.__effectsQueued = true) && pendingEffects.push(vNode) === 1) {
-    if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+    if (typeof window.requestAnimationFrame === 'function') {
       window.requestAnimationFrame(flushEffects);
     } else {
       setTimeout(flushEffects);
@@ -42,7 +42,7 @@ function useEffect(callback, args) {
     hookState.__args = args;
 
     state.vNode.__effects.push(hookState);
-    afterRender(state.vNode);
+    if (typeof window !== 'undefined') afterRender(state.vNode);
   }
 }
 

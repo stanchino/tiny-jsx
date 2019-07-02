@@ -1,5 +1,5 @@
 import TinyJSX, { createContext } from 'tiny-jsx';
-import Router, { Link, Route, Switch } from 'tiny-jsx/router';
+import { Link, Route, Switch } from 'tiny-jsx/router';
 
 import Clock from '../Clock';
 import TodoList from '../TodoList';

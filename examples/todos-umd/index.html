@@ -5,9 +5,9 @@
     <title>TinyJSX ToDo List Example</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=yes" />
-    <script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.12/tiny-jsx.min.js"></script>
-    <script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.12/tiny-jsx-hooks.min.js"></script>
-    <script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.12/tiny-jsx-dom.min.js"></script>
+    <script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.17/tiny-jsx.min.js"></script>
+    <script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.17/tiny-jsx-hooks.min.js"></script>
+    <script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.17/tiny-jsx-dom.min.js"></script>
 </head>
 <body>
 <script type="text/javascript">
@@ -47,20 +47,18 @@
           }
         }, [setText]);
 
-        return Fragment({
-          children: [
-            createElement('form', { onSubmit: addTodo }, [
-              createElement('input',  { type:  'text', value: text, onInput: changeText }),
-              createElement('button',  { type: 'submit' }, 'Add'),
-            ]),
-            createElement('ul', {}, todos.map(function(todo, key) {
-              return createElement('li', {}, [
-                todo,
-                createElement('button', { type: 'button', onClick: removeTodo(key) }, 'Remove'),
-              ])
-            })),
-          ]
-        });
+        return createElement(Fragment, {}, [
+          createElement('form', { onSubmit: addTodo }, [
+            createElement('input',  { type:  'text', value: text, onInput: changeText }),
+            createElement('button',  { type: 'submit' }, 'Add'),
+          ]),
+          createElement('ul', {}, todos.map(function(todo, key) {
+            return createElement('li', {}, [
+              todo,
+              createElement('button', { type: 'button', onClick: removeTodo(key) }, 'Remove'),
+            ])
+          })),
+        ]);
       }
 
       render(createElement(TodoList, { todos: ['a', 'b', 'c'] }), document.body);

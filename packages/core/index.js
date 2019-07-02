@@ -32,7 +32,6 @@ function createElement(type, props, children) {
     }
   }
 
-
   if (typeof type === 'function') {
     const fn = { type: 'fragment', props, __effects: [], __hooks: [] };
     fn.__mount = function () {

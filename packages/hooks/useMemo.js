@@ -1,6 +1,6 @@
 import { state, getHookState, argsChanged } from './core';
 
-export default function useMemo(callback, args) {
+function useMemo(callback, args) {
   const hookState = getHookState(state.index++);
   if (argsChanged(hookState.__args, args)) {
     hookState.__args = args;
@@ -10,3 +10,5 @@ export default function useMemo(callback, args) {
 
   return hookState.__value;
 }
+
+export default useMemo;

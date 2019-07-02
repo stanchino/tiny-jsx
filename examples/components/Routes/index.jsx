@@ -1,9 +1,8 @@
 import TinyJSX, { createContext } from 'tiny-jsx';
-import { render } from 'tiny-jsx/dom';
-import Router, { Link, Route } from 'tiny-jsx/router';
+import Router, { Link, Route, Switch } from 'tiny-jsx/router';
 
-import Clock from '../components/Clock';
-import TodoList from '../components/TodoList';
+import Clock from '../Clock';
+import TodoList from '../TodoList';
 
 const Context = createContext();
 
@@ -36,21 +35,24 @@ function Routes() {
         <Link to="/routes/#page2">Page 2</Link>
         <Link to="/routes/#clock">Clock</Link>
         <Link to="/routes/#todos">ToDos</Link>
-        <Link to="/a/b">Dynamic Routes</Link>
+        <Link to="/routes/#dynamic/a/b">Dynamic Routes</Link>
       </nav>
-      <Router>
+      <Switch>
         <Route path="/routes/"><div>Home</div></Route>
-        <Route path="/routes/#clock"><Clock resetState /></Route>
         <Route path="/routes/#clock"><Clock /></Route>
-        <Route path={["/routes/#todos", /^\/(?:([^\/]+?))\/(?:([^\/]+?))\/?$/i]}><TodoList /></Route>
-        <Route path={/^\/(?:([^\/]+?))\/(?:([^\/]+?))\/?$/i} render={({ match: { params: [a, b] } }) => {
+        <Route path="/routes/#clock"><Clock /></Route>
+        <Route path={["/routes/#todos", /^\/routes\/#dynamic\/(?:([^\/]+?))\/(?:([^\/]+?))\/?$/i]}><TodoList /></Route>
+        <Route path={/^\/routes\/#dynamic\/(?:([^\/]+?))\/(?:([^\/]+?))\/?$/i}><TodoList /></Route>
+        <Route path={/^\/routes\/#dynamic\/(?:([^\/]+?))\/(?:([^\/]+?))\/?$/i}><TodoList /></Route>
+        <Route path={/^\/routes\/#dynamic\/(?:([^\/]+?))\/(?:([^\/]+?))\/?$/i}><TodoList /></Route>
+        <Route path={/^\/routes\/#dynamic\/(?:([^\/]+?))\/(?:([^\/]+?))\/?$/i} render={({ match: { params: [a, b] } }) => {
           return `matches: /${a}/${b}/`;
         }} />
         <Route path="/routes/#page1" render={() => (<div>Page 1</div>)} />
         <Route path="/routes/#page2" component={Page} />
-      </Router>
+      </Switch>
     </>
   );
 }
 
-render(<Routes />, document.body);
+export default Routes;

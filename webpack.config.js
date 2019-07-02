@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -21,7 +22,7 @@ module.exports = {
     contentBase: path.resolve(__dirname, 'public'),
   },
   entry: {
-    router: './examples/router/index.jsx',
+    routes: './examples/routes/index.jsx',
     clock: './examples/clock/index.jsx',
     todos: './examples/todos/index.jsx',
   },
@@ -85,15 +86,31 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       filename: 'clock.html',
-      excludeChunks: ['todos', 'router'],
+      template: 'examples/index.html',
+      inject: 'head',
+      excludeChunks: ['todos', 'routes'],
     }),
     new HtmlWebpackPlugin({
       filename: 'todos.html',
-      excludeChunks: ['clock', 'router'],
+      template: 'examples/index.html',
+      inject: 'head',
+      excludeChunks: ['clock', 'routes'],
     }),
+    /*
     new HtmlWebpackPlugin({
       filename: 'routes/index.html',
+      inject: 'head',
       excludeChunks: ['clock', 'todos'],
+    }),
+    */
+    new HtmlWebpackPlugin({
+      filename: 'routes/index.html',
+      template: 'examples/routes/server.jsx',
+      inject: 'head',
+      excludeChunks: ['clock', 'todos'],
+    }),
+    new ScriptExtHtmlWebpackPlugin({
+      defaultAttribute: 'defer',
     }),
     new CompressionPlugin(),
     production && new webpack.HashedModuleIdsPlugin(),

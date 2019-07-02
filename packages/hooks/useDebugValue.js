@@ -1,3 +1,5 @@
-export default function useDebugValue(value, formatter) {
+function useDebugValue(value, formatter) {
   return formatter ? formatter(value) : value;
 }
+
+export default useDebugValue;

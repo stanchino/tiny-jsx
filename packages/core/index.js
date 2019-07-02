@@ -1,5 +1,9 @@
 import { emitter } from '../emitter';
 
+const Fragment = {
+  type: 'fragment',
+};
+
 function convert(value) {
   if (typeof value === 'string' || typeof value === 'number') {
     return { type: 'text', props: {}, __value: String(value) };
@@ -8,12 +12,18 @@ function convert(value) {
 }
 
 function buildChildren(children) {
-  if (typeof children === 'undefined' || children === null) return [];
-  return Array.isArray(children) ? children.map(convert) : [convert(children)];
+  if (typeof children === 'undefined' || children === null || children === false) return [];
+  return (Array.isArray(children) ? children.map(convert) : [convert(children)]);
 }
 
-export function createElement(type, props, children) {
-  props = Object.assign({}, props);
+function unmount(vNode) {
+  if (vNode.type !== 'fragment') return;
+  typeof vNode.__cleanup === 'function' && vNode.__cleanup();
+  vNode.props.children && vNode.props.children.forEach(unmount);
+}
+
+function createElement(type, props, children) {
+  props = Object.assign({}, props );
 
   props.children = buildChildren(children);
   if (arguments.length > 3) {
@@ -22,11 +32,20 @@ export function createElement(type, props, children) {
     }
   }
 
+
   if (typeof type === 'function') {
-    const fn = { type: 'function', props, __effects: [], __hooks: [] };
-    fn.__callback = function () {
-      emitter.emit('construct', fn);
+    const fn = { type: 'fragment', props, __effects: [], __hooks: [] };
+    fn.__mount = function () {
+      emitter.emit('mount', fn);
       fn.props.children = buildChildren(type(props));
+    };
+    fn.__cleanup = function() {
+      fn.__hooks.forEach(function(hook) {
+        typeof hook.__cleanup === 'function' &&  hook.__cleanup();
+      });
+    };
+    fn.__unmount = function() {
+      unmount(fn);
     };
     return fn;
   } else if (typeof type === 'object') {
@@ -36,15 +55,17 @@ export function createElement(type, props, children) {
   return { type, props };
 }
 
-export function createRef() {
+function createRef() {
   return {};
 }
 
-export function createContext() {
+function createContext() {
   let ctx = {};
   return {
     Consumer(props) {
-      return (Array.isArray(props.children) ? props.children[0] : props.children)(ctx);
+      if (typeof props === 'function') return props(ctx);
+      if (Array.isArray(props.children) && typeof props.children[0] === 'function') return props.children[0](ctx);
+      throw new Error('Unsupported context consumer');
     },
     Provider(props) {
       ctx = props.value;
@@ -53,12 +74,10 @@ export function createContext() {
   };
 }
 
-export const Fragment = {
-  type: 'fragment',
-};
-
+export { createElement, createRef, createContext, Fragment };
 export default {
   createElement,
+  createRef,
   createContext,
   Fragment,
 };

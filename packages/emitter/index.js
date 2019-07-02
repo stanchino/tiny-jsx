@@ -16,4 +16,6 @@ function Emitter () {
   };
 }
 
-export const emitter = Emitter();
+const emitter = Emitter();
+
+export { emitter };

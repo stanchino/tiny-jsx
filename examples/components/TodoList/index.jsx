@@ -22,7 +22,7 @@ export default function TodoList ({ todos: defaultTodos = [] }) {
   }, [setText]);
 
   return (
-    <div>
+    <>
       <form onSubmit={addTodo}>
         <input type="text" value={text} onInput={changeText} />
         <button type="submit">Add</button>
@@ -37,6 +37,6 @@ export default function TodoList ({ todos: defaultTodos = [] }) {
           ))}
         </ul>
       )}
-    </div>
+    </>
   )
 }

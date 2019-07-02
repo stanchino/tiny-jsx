@@ -1,23 +1,9 @@
 import { emitter } from '..';
 
-emitter.on('render', render);
+emitter.on('render', update);
 
 const XLINK_NS = 'http://www.w3.org/1999/xlink';
 const IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|^--/i;
-
-function propsChanged(vNode, oldNode) {
-  if (!oldNode || oldNode.type !== vNode.type) return true;
-  if (vNode.type === 'text') {
-    return oldNode.__value !== vNode.__value;
-  } else if (vNode.type === 'fragment') {
-    return false;
-  } else if (typeof vNode.type === 'string') {
-    return Object.keys(vNode.props).some(key => {
-      return key !== 'children' && key !== 'ref' && oldNode.props[key] !== vNode.props[key];
-    });
-  }
-  return false;
-}
 
 function eventProxy(DOMNode) {
   return function (e) {
@@ -25,27 +11,28 @@ function eventProxy(DOMNode) {
   }
 }
 
-function setStyle(DOMNode, value = {}, oldValue = {}) {
-  const set = Object.assign(Object.assign({}, oldValue), value);
+function setStyle(DOMNode, value = {}) {
+  const set = Object.assign({}, value);
   for (let i in set) {
-    if (set.hasOwnProperty(i) && value[i] !== oldValue[i]) {
-      DOMNode.style.setProperty(
-        (i[0] === '-' && i[1] === '-') ? i : i.replace(/[A-Z]/g, '-$&'),
-        (value && (i in value))
-          ? (typeof set[i] === 'number' && IS_NON_DIMENSIONAL.test(i) === false)
+
+    if (set.hasOwnProperty(i)) {
+      const v = (value && (i in value))
+        ? (typeof set[i] === 'number' && IS_NON_DIMENSIONAL.test(i) === false)
           ? set[i] + 'px'
           : set[i]
-          : ''
-      );
+        : '';
+      if (!DOMNode.style || DOMNode.style.getPropertyValue(i) !== v) {
+        DOMNode.style.setProperty((i[0] === '-' && i[1] === '-') ? i : i.replace(/[A-Z]/g, '-$&'), v);
+      }
     }
   }
 }
 
-function setEvent(DOMNode, name, value, oldValue) {
+function setEvent(DOMNode, name, value) {
   const useCapture = name !== (name = name.replace(/Capture$/, ''));
   const nameLower = name.toLowerCase();
   name = (nameLower in DOMNode ? nameLower : name).slice(2);
-  if (value && !oldValue) {
+  if (value && (!DOMNode.__listeners || !DOMNode.__listeners[name])) {
     DOMNode.addEventListener(name, eventProxy(DOMNode), useCapture);
   } else if (!value) {
     DOMNode.removeEventListener(name, eventProxy(DOMNode), useCapture);
@@ -67,16 +54,16 @@ function setAttribute(DOMNode, name, value) {
   }
 }
 
-function setProperty(name, vNode, oldValue) {
+function setProperty(name, vNode) {
   const DOMNode = vNode.__DOMNode;
   const value = vNode.props[name];
   const isSvg = vNode.type === 'svg';
   name = name === 'className' ? 'class' : name;
 
   if ( name === 'style') {
-    setStyle(DOMNode, value, oldValue);
+    setStyle(DOMNode, value);
   } else if (name[0] === 'o' && name[1] === 'n') {
-    setEvent(DOMNode, name, value, oldValue);
+    setEvent(DOMNode, name, value);
   } else if (name !== 'list' && name !== 'tagName' && !isSvg && (name in DOMNode)) {
     DOMNode[name] = value == null ? '' : value;
   } else if (typeof value !== 'function' && name !== 'dangerouslySetInnerHTML' && (name in DOMNode)) {
@@ -92,98 +79,137 @@ function setRef(vNode) {
   }
 }
 
-function setProperties(vNode, oldProps = {}) {
+function setProperties(vNode) {
   for (let key in vNode.props) {
     if (vNode.props.hasOwnProperty(key)) {
       if (key !== 'children' && key !== 'key' && key !== 'ref' && key !== 'path') {
-        setProperty(key, vNode, oldProps[key]);
+        setProperty(key, vNode);
       }
     }
   }
 }
 
-function renderChildren(vNode, oldChildren) {
-  if (vNode.props.children.length === 0) return;
-  for (let i in vNode.props.children) {
-    if (vNode.props.children.hasOwnProperty(i)) {
-      render(vNode.props.children[i], vNode.__DOMNode, oldChildren[i]);
-    }
-  }
+function mount (vNode) {
+  if (typeof vNode.__unmount === 'function') vNode.__unmount();
+  if (typeof vNode.__mount === 'function') return vNode.__mount();
 }
 
-function removeChildren(vNode, oldChildren) {
-  if (oldChildren.length <= vNode.props.children.length) return;
-  for (let i = vNode.props.children.length; i < oldChildren.length; i++) {
-    if (oldChildren[i].__DOMNode && vNode.__DOMNode !== oldChildren[i].__DOMNode && vNode.__DOMNode.contains(oldChildren[i].__DOMNode)) {
-      vNode.__DOMNode.removeChild(oldChildren[i].__DOMNode);
-    }
-  }
-}
-
-function removeNode(vNode, parentDOMNode) {
-  if (vNode.__DOMNode) {
-    for (let i in vNode.props.children) {
-      if (vNode.props.children[i].__DOMNode) {
-        removeNode(vNode.props.children[i], vNode.__DOMNode);
+function flatten(vNode, depth = 0) {
+  let empty = 0;
+  return vNode.props.children.map(function (child, i) {
+    if (child) {
+      child.__index = i - empty + (vNode.type === 'fragment' ? vNode.__index : 0);
+      child.__key = depth + '-' + child.__index;
+      child.__parents = vNode.__parents.concat([vNode.__key]);
+      if (child.type === 'fragment') {
+        child.__DOMNode = vNode.__DOMNode;
+        child.__depth = depth;
+        mount(child);
+        if (!child.props.children || child.props.children.filter(Boolean).length === 0) empty++;
+        else return flatten(child, depth + 1);
+      } else if (child) {
+        if (child.props.children) child.props.children = flatten(child, depth + 1);
+        return [child];
       }
     }
-    if (parentDOMNode && parentDOMNode !== vNode.__DOMNode && parentDOMNode.contains(vNode.__DOMNode)) {
-      parentDOMNode.removeChild(vNode.__DOMNode);
-    }
-    delete vNode.__DOMNode;
-    if (vNode.props.resetState) {
-      vNode.__effectsQueued = false;
-      vNode.__effects = [];
-      vNode.__hooks = [];
-    }
-  }
+  }).reduce(function(a, b) {
+    return a.concat(b);
+  }, []).filter(Boolean);
 }
 
-export function render(vNode, parentDOMNode, oldNode = {}) {
-  if (!parentDOMNode && !vNode.__DOMNode && !oldNode.__DOMNode) return;
-
-  if (!vNode) return oldNode && removeNode(oldNode, parentDOMNode);
-  if (vNode.__remove) return removeNode(vNode, parentDOMNode);
-
-  const oldProps = Object.assign({}, oldNode.props || vNode.props);
-  if (vNode.type === 'function' && typeof vNode.__callback === 'function') vNode.__callback();
-
-  let exists = vNode.__DOMNode || oldNode.__DOMNode;
-  let rerender = exists ? propsChanged(vNode, oldNode) : vNode.type !== 'fragment' && vNode.type !== 'function';
-  if (exists && oldNode.__DOMNode) {
-    vNode.__DOMNode = oldNode.__DOMNode;
-  } else if (!exists) {
-    if (vNode.type === 'text') {
-      vNode.__DOMNode = document.createTextNode(String(vNode.__value));
-    } else if (vNode.type === 'fragment' || vNode.type === 'function') {
-      vNode.__DOMNode = parentDOMNode;
-    } else if (!vNode.__DOMNode && typeof vNode.type === 'string') {
-      vNode.__DOMNode = document.createElement(vNode.type);
-    } else if (!vNode.__DOMNode) {
-      throw new Error(`Unknown Virtual DOM node type ${vNode.type}`);
-    }
-  }
-
-  if (exists && rerender && vNode.type === 'text') {
+function processDOMNode(vNode) {
+  vNode.__DOMNode.__index = vNode.__index;
+  vNode.__DOMNode.__key = vNode.__key;
+  vNode.__DOMNode.__parents = vNode.__parents;
+  if (vNode.type !== 'text') {
+    setProperties(vNode);
+  } else if (vNode.__DOMNode.nodeValue !== vNode.__value) {
     vNode.__DOMNode.nodeValue = vNode.__value;
-  } else if (!exists && rerender) {
-    parentDOMNode.appendChild(vNode.__DOMNode);
-  }
-
-  if (rerender) {
-    !exists && setRef(vNode);
-    setProperties(vNode, exists && oldProps);
-  }
-
-  if (vNode.props.children) {
-    renderChildren(vNode, oldProps.children || []);
-    removeChildren(vNode,oldProps.children || []);
   }
 }
 
-export const createPortal = render;
+function createDOMNode(vNode) {
+  vNode.__DOMNode = vNode.type === 'text'
+    ? document.createTextNode(String(vNode.__value))
+    : document.createElement(vNode.type);
+  processDOMNode(vNode);
+  setRef(vNode);
+  return vNode.__DOMNode;
+}
+
+function hydrateDOMNode(vNode, DOMNode) {
+  if (
+    (typeof DOMNode.__index !== 'undefined' && vNode.__index !== DOMNode.__index) ||
+    (vNode.type === 'text' && !(DOMNode instanceof Text)) ||
+    (DOMNode.tagName !== vNode.type.toUpperCase())
+  ) return false;
+  vNode.__DOMNode = DOMNode;
+  processDOMNode(vNode);
+  return true;
+}
+
+function renderChild(vNode, parentDOMNode, oldDOMNode, appendBefore = null) {
+  if (!oldDOMNode) {
+    parentDOMNode.insertBefore(createDOMNode(vNode), appendBefore);
+  } else if (!hydrateDOMNode(vNode, oldDOMNode)) {
+    if (oldDOMNode.__index > vNode.__index) {
+      parentDOMNode.insertBefore(createDOMNode(vNode), oldDOMNode);
+    } else {
+      parentDOMNode.replaceChild(createDOMNode(vNode), oldDOMNode);
+    }
+  }
+}
+function renderChildren(children, parentDOMNode, oldChildren, appendBefore = null) {
+  children.forEach(function(child, i) {
+    const oldDOMNode = oldChildren[i];
+    renderChild(child, parentDOMNode, oldDOMNode, appendBefore);
+    if (child.props.children) renderChildren(child.props.children, child.__DOMNode, child.__DOMNode.childNodes);
+  });
+  if (children.length < oldChildren.length) {
+    Array.prototype.slice.call(oldChildren, children.length, oldChildren.length).forEach(function(child) {
+      parentDOMNode.removeChild(child);
+    })
+  }
+}
+
+function update(vNode) {
+  if (!vNode.__DOMNode || vNode.type !== 'fragment') throw new Error('error');
+  mount(vNode);
+  let firstIndex;
+  let lastIndex;
+  vNode.__DOMNode.childNodes.forEach(function(child, i) {
+    if (typeof firstIndex === 'undefined' && i >= vNode.__index && child.__parents.indexOf(vNode.__key) !== -1) firstIndex = i;
+    if (typeof firstIndex !== 'undefined' && child.__parents.indexOf(vNode.__key) !== -1) lastIndex = i;
+  });
+  const oldChildren = Array.prototype.slice.call(vNode.__DOMNode.childNodes, firstIndex, lastIndex + 1);
+  if (vNode.props.children) {
+    const children = flatten(vNode);
+    renderChildren(children, vNode.__DOMNode, oldChildren, vNode.__DOMNode.childNodes[lastIndex + 1]);
+  }
+}
+
+function render(vNode, parentDOMNode) {
+  if (!parentDOMNode) throw new Error('error');
+  if (vNode.type === 'fragment') {
+    if (typeof vNode.__index === 'undefined') vNode.__index = 0;
+    if (typeof vNode.__depth === 'undefined') vNode.__depth = 0;
+    if (typeof vNode.__key === 'undefined') vNode.__key = '0-0';
+    if (typeof vNode.__parents === 'undefined') vNode.__parents = [];
+    if (typeof vNode.__DOMNode === 'undefined') vNode.__DOMNode = parentDOMNode;
+    mount(vNode);
+  } else {
+    renderChild(vNode, parentDOMNode, parentDOMNode.childNodes[0]);
+  }
+  if (vNode.props.children) {
+    const children = flatten(vNode);
+    renderChildren(children, vNode.__DOMNode, vNode.__DOMNode.childNodes);
+  }
+}
+
+export { render as hydrate, render, render as createPortal };
 
 export default {
-  createPortal,
+  createPortal: render,
+  hydrate: render,
   render,
 };

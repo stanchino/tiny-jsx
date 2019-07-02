@@ -1,6 +1,6 @@
 import { state, getHookState, argsChanged } from './core';
 
-export default function useImperativeHandle(ref, createHandle, args) {
+function useImperativeHandle(ref, createHandle, args) {
   const hookState = getHookState(state.index++);
   if (argsChanged(hookState.__args, args)) {
     hookState.__args = args;
@@ -9,3 +9,5 @@ export default function useImperativeHandle(ref, createHandle, args) {
     }
   }
 }
+
+export default useImperativeHandle;

@@ -1,16 +1,16 @@
 import { emitter } from '..';
 
-export const state = {
-  index: 0, // Hook iterator index
-  vNode: undefined, // The constructed vNode
+const state = {
+  index: 0,
+  vNode: undefined,
 };
 
-emitter.on('construct', function(vNode) {
+emitter.on('mount', function(vNode) {
   state.index = 0;
   state.vNode = vNode;
 });
 
-export function getHookState(index) {
+function getHookState(index) {
   typeof state.vNode.__effects === 'undefined' && (state.vNode.__effects = []);
   const hooks = state.vNode.__hooks || (state.vNode.__hooks = []);
 
@@ -20,12 +20,12 @@ export function getHookState(index) {
   return hooks[index];
 }
 
-export function argsChanged(oldArgs, newArgs) {
+function argsChanged(oldArgs, newArgs) {
   return !oldArgs || newArgs.some((arg, index) => arg !== oldArgs[index]);
 }
 
-export function invokeOrReturn(arg, f) {
+function invokeOrReturn(arg, f) {
   return typeof f === 'function' ? f(arg) : f;
 }
 
-export { emitter };
+export { emitter, state, getHookState, argsChanged, invokeOrReturn };

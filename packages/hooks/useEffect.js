@@ -35,7 +35,7 @@ function afterRender (vNode) {
   }
 }
 
-export default function useEffect(callback, args) {
+function useEffect(callback, args) {
   const hookState = getHookState(state.index++);
   if (argsChanged(hookState.__args, args)) {
     hookState.__value = callback;
@@ -45,3 +45,5 @@ export default function useEffect(callback, args) {
     afterRender(state.vNode);
   }
 }
+
+export default useEffect;

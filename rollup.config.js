@@ -334,6 +334,19 @@ export default [
     ]
   },
   {
+    input: 'packages/server/index.js',
+    external: ['..'],
+    output: [
+      { dir: 'dist/cjs/server', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/server', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+    ],
+    plugins: [
+      resolve(),
+      commonjs(),
+      analyze(),
+    ]
+  },
+  {
     input: 'packages/router/index.js',
     external: ['..', '../hooks/useEffect', '../hooks/useMemo', '../hooks/useState'],
     output: [

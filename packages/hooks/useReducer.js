@@ -1,6 +1,6 @@
 import { emitter, state, getHookState, invokeOrReturn } from './core';
 
-export default function useReducer(reducer, initialState, init) {
+function useReducer(reducer, initialState, init) {
   const hookState = getHookState(state.index++);
   if (!hookState.__vNode) {
     hookState.__vNode = state.vNode;
@@ -20,3 +20,5 @@ export default function useReducer(reducer, initialState, init) {
 
   return hookState.__value;
 }
+
+export default useReducer;

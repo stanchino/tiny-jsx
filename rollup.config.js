@@ -155,8 +155,8 @@ export default [
   {
     input: 'packages/emitter/index.js',
     output: [
-      { dir: 'dist/cjs/emitter', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/emitter', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/emitter', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/emitter', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -168,8 +168,8 @@ export default [
     input: 'packages/hooks/core.js',
     external: ['..'],
     output: [
-      { dir: 'dist/cjs/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -181,8 +181,8 @@ export default [
     input: 'packages/hooks/useCallback.js',
     external: ['./useMemo', './core'],
     output: [
-      { dir: 'dist/cjs/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -194,8 +194,8 @@ export default [
     input: 'packages/hooks/useContext.js',
     external: ['./core'],
     output: [
-      { dir: 'dist/cjs/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -206,8 +206,8 @@ export default [
   {
     input: 'packages/hooks/useDebugValue.js',
     output: [
-      { dir: 'dist/cjs/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -219,8 +219,8 @@ export default [
     input: 'packages/hooks/useEffect.js',
     external: ['./core'],
     output: [
-      { dir: 'dist/cjs/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -232,8 +232,21 @@ export default [
     input: 'packages/hooks/useImperativeHandle.js',
     external: ['./core'],
     output: [
-      { dir: 'dist/cjs/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+    ],
+    plugins: [
+      resolve(),
+      commonjs(),
+      analyze(),
+    ]
+  },
+  {
+    input: 'packages/hooks/useLayoutEffect.js',
+    external: ['./core'],
+    output: [
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -245,8 +258,8 @@ export default [
     input: 'packages/hooks/useMemo.js',
     external: ['./core'],
     output: [
-      { dir: 'dist/cjs/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -258,8 +271,8 @@ export default [
     input: 'packages/hooks/useReducer.js',
     external: ['./core'],
     output: [
-      { dir: 'dist/cjs/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -272,8 +285,8 @@ export default [
     input: 'packages/hooks/useRef.js',
     external: ['./core'],
     output: [
-      { dir: 'dist/cjs/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -285,8 +298,8 @@ export default [
     input: 'packages/hooks/useState.js',
     external: ['./useReducer', './core'],
     output: [
-      { dir: 'dist/cjs/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -298,8 +311,8 @@ export default [
     input: 'packages/hooks/core.js',
     external: ['..'],
     output: [
-      { dir: 'dist/cjs/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -311,8 +324,8 @@ export default [
     input: 'packages/hooks/index.js',
     external: ['./useCallback', './useContext', './useDebugValue', './useEffect', './useImperativeHandle', './useMemo', './useReducer', './useRef', './useState', './core'],
     output: [
-      { dir: 'dist/cjs/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -324,8 +337,8 @@ export default [
     input: 'packages/dom/index.js',
     external: ['..'],
     output: [
-      { dir: 'dist/cjs/dom', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/dom', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/dom', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/dom', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -337,8 +350,8 @@ export default [
     input: 'packages/server/index.js',
     external: ['..'],
     output: [
-      { dir: 'dist/cjs/server', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/server', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/server', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/server', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -350,8 +363,8 @@ export default [
     input: 'packages/router/index.js',
     external: ['..', '../hooks/useEffect', '../hooks/useMemo', '../hooks/useState'],
     output: [
-      { dir: 'dist/cjs/router', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/router', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/router', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es/router', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),
@@ -363,8 +376,8 @@ export default [
     input: 'packages/index.js',
     external: ['../emitter', './emitter'],
     output: [
-      { dir: 'dist/cjs', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/es', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
     ],
     plugins: [
       resolve(),

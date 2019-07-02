@@ -85,10 +85,10 @@ $ npm install --save tiny-jsx
 ```
 or in the browser
 ```html
-<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.16/tiny-jsx.min.js"></script>
-<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.16/tiny-jsx-hooks.min.js"></script>
-<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.16/tiny-jsx-dom.min.js"></script>
-<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.16/tiny-jsx-router.min.js"></script>
+<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.18/tiny-jsx.min.js"></script>
+<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.18/tiny-jsx-hooks.min.js"></script>
+<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.18/tiny-jsx-dom.min.js"></script>
+<script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.18/tiny-jsx-router.min.js"></script>
 
 ```
 

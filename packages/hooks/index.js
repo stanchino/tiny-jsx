@@ -3,6 +3,7 @@ export { default as useContext } from './useContext';
 export { default as useDebugValue } from './useDebugValue';
 export { default as useEffect } from './useEffect';
 export { default as useImperativeHandle } from './useImperativeHandle';
+export { default as useLayoutEffect } from './useLayoutEffect';
 export { default as useMemo } from './useMemo';
 export { default as useReducer } from './useReducer';
 export { default as useRef } from './useRef';

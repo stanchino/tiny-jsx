@@ -18,14 +18,14 @@
           function Routes() {
             return [
               createElement('nav', {}, [
-                createElement(Link, { to: '/' }, 'Home'),
-                createElement(Link, { to: '/page1' }, 'Page 1'),
-                createElement(Link, { to: '/page2' }, 'Page 2'),
+                createElement(Link, { to: '/tiny-jsx/examples/router-umd/' }, 'Home'),
+                createElement(Link, { to: '/tiny-jsx/examples/router-umd/page1' }, 'Page 1'),
+                createElement(Link, { to: '/tiny-jsx/examples/router-umd/page2' }, 'Page 2'),
               ]),
               createElement(Switch, {}, [
-                createElement(Route, { path: '/' }, createElement('div', {}, 'Home')),
-                createElement(Route, { path: '/page1' }, createElement('div', {}, 'Page 1')),
-                createElement(Route, { path: '/page2' }, createElement('div', {}, 'Page 2')),
+                createElement(Route, { path: '/tiny-jsx/examples/router-umd/' }, createElement('div', {}, 'Home')),
+                createElement(Route, { path: '/tiny-jsx/examples/router-umd/page1' }, createElement('div', {}, 'Page 1')),
+                createElement(Route, { path: '/tiny-jsx/examples/router-umd/page2' }, createElement('div', {}, 'Page 2')),
               ]),
             ];
           }

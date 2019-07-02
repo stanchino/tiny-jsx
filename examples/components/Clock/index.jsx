@@ -2,7 +2,7 @@ import TinyJSX from 'tiny-jsx';
 import useEffect from 'tiny-jsx/hooks/useEffect';
 import useState from 'tiny-jsx/hooks/useState';
 
-export default function Clock () {
+export default function Clock ({ color }) {
   const [tick, setTick] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
@@ -11,5 +11,5 @@ export default function Clock () {
     return () => clearInterval(interval);
   }, [tick]);
 
-  return <><span>Seconds:</span> <span>{tick}</span></>;
+  return <><span style={{ color }}>Seconds:</span> <span>{tick}</span></>;
 }

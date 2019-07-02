@@ -41,7 +41,7 @@ function createElement(type, props, children) {
     };
     fn.__cleanup = function() {
       fn.__hooks.forEach(function(hook) {
-        typeof hook.__cleanup === 'function' &&  hook.__cleanup();
+        typeof hook.__cleanup === 'function' && hook.__cleanup();
       });
     };
     fn.__unmount = function() {

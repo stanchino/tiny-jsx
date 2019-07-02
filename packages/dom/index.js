@@ -139,31 +139,31 @@ function createDOMNode(vNode) {
 
 function hydrateDOMNode(vNode, DOMNode) {
   if (
-    (typeof DOMNode.__index !== 'undefined' && vNode.__index !== DOMNode.__index) ||
-    (vNode.type === 'text' && !(DOMNode instanceof Text)) ||
-    (DOMNode.tagName !== vNode.type.toUpperCase())
+    typeof DOMNode.__index !== 'undefined' && vNode.__index !== DOMNode.__index ||
+    !(vNode.type === 'text' ? DOMNode instanceof Text : DOMNode.tagName === vNode.type.toUpperCase())
   ) return false;
   vNode.__DOMNode = DOMNode;
   processDOMNode(vNode);
+  // console.debug('hydrate', vNode.__DOMNode);
   return true;
 }
 
-function renderChild(vNode, parentDOMNode, oldDOMNode, appendBefore = null) {
+function renderChild(vNode, parentDOMNode, oldDOMNode, insertBefore = null) {
   if (!oldDOMNode) {
-    parentDOMNode.insertBefore(createDOMNode(vNode), appendBefore);
+    parentDOMNode.insertBefore(createDOMNode(vNode), insertBefore);
+    // console.debug('append', parentDOMNode, vNode.__DOMNode, insertBefore);
   } else if (!hydrateDOMNode(vNode, oldDOMNode)) {
-    if (oldDOMNode.__index > vNode.__index) {
-      parentDOMNode.insertBefore(createDOMNode(vNode), oldDOMNode);
-    } else {
-      parentDOMNode.replaceChild(createDOMNode(vNode), oldDOMNode);
-    }
+    parentDOMNode.replaceChild(createDOMNode(vNode), oldDOMNode);
+    // console.debug('replaceChild', parentDOMNode, vNode.__DOMNode, oldDOMNode);
   }
 }
-function renderChildren(children, parentDOMNode, oldChildren, appendBefore = null) {
+function renderChildren(children, parentDOMNode, oldChildren, insertBefore = null) {
   children.forEach(function(child, i) {
     const oldDOMNode = oldChildren[i];
-    renderChild(child, parentDOMNode, oldDOMNode, appendBefore);
-    if (child.props.children) renderChildren(child.props.children, child.__DOMNode, child.__DOMNode.childNodes);
+    renderChild(child, parentDOMNode, oldDOMNode, insertBefore);
+    if (child.props.children) {
+      renderChildren(child.props.children, child.__DOMNode, child.__DOMNode.childNodes);
+    }
   });
   if (children.length < oldChildren.length) {
     Array.prototype.slice.call(oldChildren, children.length, oldChildren.length).forEach(function(child) {
@@ -182,6 +182,7 @@ function update(vNode) {
     if (typeof firstIndex !== 'undefined' && child.__parents.indexOf(vNode.__key) !== -1) lastIndex = i;
   });
   const oldChildren = Array.prototype.slice.call(vNode.__DOMNode.childNodes, firstIndex, lastIndex + 1);
+  // console.debug(vNode.__key, firstIndex, lastIndex, oldChildren);
   if (vNode.props.children) {
     const children = flatten(vNode);
     renderChildren(children, vNode.__DOMNode, oldChildren, vNode.__DOMNode.childNodes[lastIndex + 1]);

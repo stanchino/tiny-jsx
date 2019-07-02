@@ -8,39 +8,32 @@
     <script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.17/tiny-jsx.min.js"></script>
     <script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.17/tiny-jsx-dom.min.js"></script>
     <script defer type="text/javascript" src="https://unpkg.com/tiny-jsx@1.0.17/tiny-jsx-router.min.js"></script>
-</head>
-<body>
-<script type="text/javascript">
-  document.onreadystatechange = function () {
-    if (document.readyState === 'complete') {
-      const { createElement } = TinyJSX;
-      const { render } = TinyJSXDom;
-      const { Link, Route, Switch } = TinyJSXRouter;
+    <script type="text/javascript">
+      document.onreadystatechange = function () {
+        if (document.readyState === 'complete') {
+          const { createElement } = TinyJSX;
+          const { render } = TinyJSXDom;
+          const { Link, Route, Switch, default: Router } = TinyJSXRouter;
 
-      function Router() {
-        return [
-          createElement('nav', {}, [
-            createElement(Link, { to: '/' }, 'Home'),
-            createElement(Link, { to: '/page1' }, 'Page 1'),
-            createElement(Link, { to: '/page2' }, 'Page 2'),
-          ]),
-          createElement(Switch, {}, [
-            createElement(Route, { path: '/', children: [
-              createElement('div', {}, 'Home')
-            ]}),
-            createElement(Route, { path: '/page1', children: [
-              createElement('div', {}, 'Page 1'),
-            ]}),
-            createElement(Route, { path: '/page2', children: [
-              createElement('div', {}, 'Page 2'),
-            ]}),
-          ]),
-        ];
+          function Routes() {
+            return [
+              createElement('nav', {}, [
+                createElement(Link, { to: '/' }, 'Home'),
+                createElement(Link, { to: '/page1' }, 'Page 1'),
+                createElement(Link, { to: '/page2' }, 'Page 2'),
+              ]),
+              createElement(Switch, {}, [
+                createElement(Route, { path: '/' }, createElement('div', {}, 'Home')),
+                createElement(Route, { path: '/page1' }, createElement('div', {}, 'Page 1')),
+                createElement(Route, { path: '/page2' }, createElement('div', {}, 'Page 2')),
+              ]),
+            ];
+          }
+
+          render(createElement(Router, {}, createElement(Routes)), document.body);
+        }
       }
-
-      render(createElement(Router), document.body);
-    }
-  }
-</script>
-</body>
+    </script>
+</head>
+<body></body>
 </html>

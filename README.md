@@ -7,18 +7,6 @@ TinyJSX is a lightweight UI JavaScript library for developing user interfaces us
 ![David](https://img.shields.io/david/optional/stanchino/tiny-jsx.svg)
 ![David](https://img.shields.io/david/dev/stanchino/tiny-jsx.svg)
 
-Uncompressed packages sizes
-GZip packages sizes
-
-[![tiny-jsx.min.js](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx@latest/tiny-jsx.min.js?label=tiny-jsx
-)](https://unpkg.com/tiny-jsx/tiny-jsx.min.js)
-[![tiny-jsx-hooks.min.js](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx@latest/tiny-jsx-hooks.min.js?label=tiny-jsx-hooks
-)](https://unpkg.com/tiny-jsx/tiny-jsx-hooks.min.js)
-[![tiny-jsx-dom.min.js](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx@latest/tiny-jsx-dom.min.js?label=tiny-jsx-dom
-)](https://unpkg.com/tiny-jsx/tiny-jsx-dom.min.js)
-[![tiny-jsx-router.min.js](https://badgen.net/badgesize/normal/https://unpkg.com/tiny-jsx@latest/tiny-jsx-router.min.js?label=tiny-jsx-router
-)](https://unpkg.com/tiny-jsx/tiny-jsx-router.min.js)
-
 GZip packages sizes
 
 [![tiny-jsx.min.js.gz](https://badgen.net/badgesize/gzip/https://unpkg.com/tiny-jsx@latest/tiny-jsx.min.js.gz?label=tiny-jsx

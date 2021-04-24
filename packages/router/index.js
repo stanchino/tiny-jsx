@@ -70,8 +70,8 @@ function Route ({ path, render, component, resetState, children }) {
     if (typeof render === 'function') return render({ match: { params: matches }});
     if (typeof component !== 'undefined') return component({ match: { params: matches }});
     return (children || []).map(function(child) {
-      child.props.match = { params: matches };
-      child.props.resetState = child.props.resetState || resetState;
+      child.attributes.match = { params: matches };
+      child.attributes.resetState = child.attributes.resetState || resetState;
       return child;
     });
   });

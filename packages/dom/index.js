@@ -1,30 +1,12 @@
-import { emitter } from '..';
-
-emitter.on('render', update);
+const { state } = require('../hooks/core');
 
 const XLINK_NS = 'http://www.w3.org/1999/xlink';
+
 const IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|^--/i;
 
 function eventProxy(DOMNode) {
   return function (e) {
     return DOMNode.__listeners[e.type](e);
-  }
-}
-
-function setStyle(DOMNode, value = {}) {
-  const set = Object.assign({}, value);
-  for (let i in set) {
-
-    if (set.hasOwnProperty(i)) {
-      const v = (value && (i in value))
-        ? (typeof set[i] === 'number' && IS_NON_DIMENSIONAL.test(i) === false)
-          ? set[i] + 'px'
-          : set[i]
-        : '';
-      if (!DOMNode.style || DOMNode.style.getPropertyValue(i) !== v) {
-        DOMNode.style.setProperty((i[0] === '-' && i[1] === '-') ? i : i.replace(/[A-Z]/g, '-$&'), v);
-      }
-    }
   }
 }
 
@@ -54,163 +36,156 @@ function setAttribute(DOMNode, name, value) {
   }
 }
 
-function setProperty(name, vNode) {
-  const DOMNode = vNode.__DOMNode;
-  const value = vNode.props[name];
-  const isSvg = vNode.type === 'svg';
-  name = name === 'className' ? 'class' : name;
+function setStyle(DOMNode, value = {}) {
+  const set = Object.assign({}, value);
+  for (let i in set) {
 
-  if ( name === 'style') {
-    setStyle(DOMNode, value);
-  } else if (name[0] === 'o' && name[1] === 'n') {
-    setEvent(DOMNode, name, value);
-  } else if (name !== 'list' && name !== 'tagName' && !isSvg && (name in DOMNode)) {
-    DOMNode[name] = value == null ? '' : value;
-  } else if (typeof value !== 'function' && name !== 'dangerouslySetInnerHTML' && (name in DOMNode)) {
-    setAttribute(DOMNode, name, value);
-  }
-}
-
-function setRef(vNode) {
-  if (typeof vNode.props.ref === 'function') {
-    vNode.props.ref(vNode.__DOMNode);
-  } else if (typeof vNode.props.ref === 'object') {
-    vNode.props.ref.current = vNode.__DOMNode;
-  }
-}
-
-function setProperties(vNode) {
-  for (let key in vNode.props) {
-    if (vNode.props.hasOwnProperty(key)) {
-      if (key !== 'children' && key !== 'key' && key !== 'ref' && key !== 'path') {
-        setProperty(key, vNode);
+    if (set.hasOwnProperty(i)) {
+      const v = (value && (i in value))
+        ? (typeof set[i] === 'number' && IS_NON_DIMENSIONAL.test(i) === false)
+          ? set[i] + 'px'
+          : set[i]
+        : '';
+      if (!DOMNode.style || DOMNode.style.getPropertyValue(i) !== v) {
+        DOMNode.style.setProperty((i[0] === '-' && i[1] === '-') ? i : i.replace(/[A-Z]/g, '-$&'), v);
       }
     }
   }
 }
 
-function mount (vNode) {
-  if (typeof vNode.__unmount === 'function') vNode.__unmount();
-  if (typeof vNode.__mount === 'function') return vNode.__mount();
+function processDOMNode(vNode, domNode) {
+  const a = vNode.attributes || {};
+  // copy attributes onto the new node:
+  Object.keys(a).forEach(function (k) {
+    if (k === 'children') return;
+    if (k[0] === 'o' && k[1] === 'n') {
+      setEvent(domNode, k, a[k]);
+    } else if (k === 'style') {
+      setStyle(domNode, a[k]);
+    } else if (k === 'className') {
+      setAttribute(domNode, 'class', a[k]);
+    } else if (k !== 'list' && k !== 'tagName' && vNode.name !== 'svg' && (k in domNode)) {
+      domNode[k] = a[k] == null ? '' : a[k];
+    } else if (typeof a[k] !== 'function' && k !== 'dangerouslySetInnerHTML' && (k in domNode)) {
+      setAttribute(domNode, k, a[k])
+    }
+  });
 }
 
-function flatten(vNode, depth = 0) {
-  let empty = 0;
-  return vNode.props.children.map(function (child, i) {
-    if (child) {
-      child.__index = i - empty + (vNode.type === 'fragment' ? vNode.__index : 0);
-      child.__key = depth + '-' + child.__index;
-      child.__parents = vNode.__parents.concat([vNode.__key]);
-      child.__parent = vNode;
-      if (child.type === 'fragment') {
-        child.__DOMNode = vNode.__DOMNode;
-        child.__depth = depth;
-        mount(child);
-        if (!child.props.children || child.props.children.filter(Boolean).length === 0) empty++;
-        else return flatten(child, depth + 1);
-      } else if (child) {
-        if (child.props.children) child.props.children = flatten(child, depth + 1);
-        return [child];
+function isChanged(oldNode, newNode) {
+  return Object.keys(newNode.attributes || {}).some(function(arg) {
+    if (arg === 'children') return false;
+    return oldNode.attributes[arg] !== newNode.attributes[arg];
+  });
+}
+
+function isString(vNode) {
+  const type = typeof vNode;
+  return (
+    type === 'string'
+    || type === 'number'
+    || type === 'bigint'
+    || type === 'symbol'
+  );
+}
+
+function domNode(vNode) {
+  if (vNode.name === 'text') return document.createTextNode(vNode.value);
+  const domNode = document.createElement(vNode.name);
+  processDOMNode(vNode, domNode);
+  return domNode;
+}
+
+function removeExtraChildren(oldChildren, from) {
+  try {
+    oldChildren.slice(from).forEach(function (c) {
+      if (c.name === 'function') {
+        removeExtraChildren(c.children, 0);
+      } else {
+        c.domNode.remove();
       }
+    });
+  } catch (e) {
+    console.log('remove extra children error', e, from, oldChildren);
+  }
+}
+
+function render(node, parent, oldNode = undefined) {
+  const type = typeof node;
+  // skip empty nodes
+  if (node === null || type === 'boolean' || type === 'undefined') {
+    return;
+  }
+  // Render string, number, bigint and symbol as a text node.
+  const vNode = isString(node) ? { name: 'text', value: node, children: [], attributes: {} } : node;
+
+  // process function
+  if (vNode.name === 'function') {
+    state.index = 0;
+    state.vNode = vNode;
+
+    // refresh is used to re-render the DOM tree
+    vNode.refresh = function () {
+      render(this, parent, Object.assign({}, this));
+    };
+
+    // render children
+    let children = vNode.value(vNode.attributes);
+    children = (Array.isArray(children) ? children : [children])
+    children = children.map(function(child) {
+      // Convert string, number, bigint and symbol primitives to text
+      if (child === null || typeof child === 'boolean' || typeof child === 'undefined') {
+        return { name: 'empty', value: child, children: [], attributes: {} };
+      }
+      return isString(child) ? { name: 'text', value: child, children: [], attributes: {} } : child;
+    });
+
+    children.forEach(function(c, i) {
+      c.prev = children[i-1];
+      render(c, parent, oldNode ? oldNode.children[i] : undefined);
+    });
+    vNode.children = children;
+
+    // remove excess children
+    if (oldNode) removeExtraChildren(oldNode.children || [], vNode.children.length);
+    return;
+  }
+
+  // render
+  try {
+    if (!oldNode) {
+      vNode.domNode = domNode(vNode);
+      if (vNode.prev && vNode.prev.domNode && vNode.prev.domNode.nextSibling) {
+        // console.log('insert after', parent, vNode);
+        parent.insertBefore(vNode.domNode, vNode.prev.domNode.nextSibling);
+      } else {
+        // console.log('append', parent, vNode);
+        parent.appendChild(vNode.domNode);
+      }
+    } else if ((oldNode.name !== vNode.name) || oldNode.value !== vNode.value) {
+      vNode.domNode = domNode(vNode);
+      // console.log('replace', oldNode, vNode);
+      if (oldNode.domNode) oldNode.domNode.replaceWith(vNode.domNode);
+    } else if (isChanged(oldNode, vNode)) {
+      // console.log('update', oldNode, vNode);
+      vNode.domNode = oldNode.domNode;
+      processDOMNode(vNode, vNode.domNode);
+    } else {
+      // console.log('keep', oldNode, vNode);
+      vNode.domNode = oldNode.domNode;
     }
-  }).reduce(function(a, b) {
-    return a.concat(b);
-  }, []).filter(Boolean);
-}
-
-function processDOMNode(vNode) {
-  vNode.__DOMNode.__index = vNode.__index;
-  vNode.__DOMNode.__key = vNode.__key;
-  vNode.__DOMNode.__parents = vNode.__parents;
-  if (vNode.type !== 'text') {
-    setProperties(vNode);
-  } else if (vNode.__DOMNode.nodeValue !== vNode.__value) {
-    vNode.__DOMNode.nodeValue = vNode.__value;
+  } catch (e) {
+    console.log('render error', e, parent, vNode, oldNode);
   }
-}
 
-function createDOMNode(vNode) {
-  vNode.__DOMNode = vNode.type === 'text'
-    ? document.createTextNode(String(vNode.__value))
-    : document.createElement(vNode.type);
-  processDOMNode(vNode);
-  setRef(vNode);
-  return vNode.__DOMNode;
-}
-
-function hydrateDOMNode(vNode, DOMNode) {
-  if (
-    typeof DOMNode.__index !== 'undefined' && vNode.__index !== DOMNode.__index ||
-    !(vNode.type === 'text' ? DOMNode instanceof Text : DOMNode.tagName === vNode.type.toUpperCase())
-  ) return false;
-  vNode.__DOMNode = DOMNode;
-  processDOMNode(vNode);
-  // console.debug('hydrate', vNode.__DOMNode);
-  return true;
-}
-
-function renderChild(vNode, parentDOMNode, oldDOMNode, insertBefore = null) {
-  if (!oldDOMNode) {
-    parentDOMNode.insertBefore(createDOMNode(vNode), insertBefore);
-    // console.debug('append', parentDOMNode, vNode.__DOMNode, insertBefore);
-  } else if (!hydrateDOMNode(vNode, oldDOMNode)) {
-    parentDOMNode.replaceChild(createDOMNode(vNode), oldDOMNode);
-    // console.debug('replaceChild', parentDOMNode, vNode.__DOMNode, oldDOMNode);
-  }
-}
-function renderChildren(children, parentDOMNode, oldChildren, insertBefore = null) {
-  children.forEach(function(child, i) {
-    const oldDOMNode = oldChildren[i];
-    renderChild(child, parentDOMNode, oldDOMNode, insertBefore);
-    if (child.props.children) {
-      renderChildren(child.props.children, child.__DOMNode, child.__DOMNode.childNodes);
-    }
+  // render children
+  vNode.children.forEach(function(c, i) {
+    c.prev = vNode.children[i-1];
+    render(c, vNode.domNode, oldNode ? oldNode.children[i] : undefined);
   });
-  if (children.length < oldChildren.length) {
-    Array.prototype.slice.call(oldChildren, children.length, oldChildren.length).forEach(function(child) {
-      parentDOMNode.removeChild(child);
-    })
-  }
-}
 
-function update(vNode) {
-  if (vNode.type !== 'fragment') throw new Error('error');
-  let parent = vNode.__parent;
-  while (!vNode.__DOMNode) {
-    vNode.__DOMNode = parent.__DOMNode;
-    parent = parent.__parent;
-  }
-  mount(vNode);
-  let firstIndex;
-  let lastIndex;
-  vNode.__DOMNode.childNodes.forEach(function(child, i) {
-    if (typeof firstIndex === 'undefined' && i >= vNode.__index && child.__parents.indexOf(vNode.__key) !== -1) firstIndex = i;
-    if (typeof firstIndex !== 'undefined' && child.__parents.indexOf(vNode.__key) !== -1) lastIndex = i;
-  });
-  const oldChildren = Array.prototype.slice.call(vNode.__DOMNode.childNodes, firstIndex, lastIndex + 1);
-  // console.debug(vNode.__key, firstIndex, lastIndex, oldChildren);
-  if (vNode.props.children) {
-    const children = flatten(vNode);
-    renderChildren(children, vNode.__DOMNode, oldChildren, vNode.__DOMNode.childNodes[lastIndex + 1]);
-  }
-}
-
-function render(vNode, parentDOMNode) {
-  if (!parentDOMNode) throw new Error('error');
-  if (vNode.type === 'fragment') {
-    if (typeof vNode.__index === 'undefined') vNode.__index = 0;
-    if (typeof vNode.__depth === 'undefined') vNode.__depth = 0;
-    if (typeof vNode.__key === 'undefined') vNode.__key = '0-0';
-    if (typeof vNode.__parents === 'undefined') vNode.__parents = [];
-    if (typeof vNode.__DOMNode === 'undefined') vNode.__DOMNode = parentDOMNode;
-    mount(vNode);
-  } else {
-    renderChild(vNode, parentDOMNode, parentDOMNode.childNodes[0]);
-  }
-  if (vNode.props.children) {
-    const children = flatten(vNode);
-    renderChildren(children, vNode.__DOMNode, vNode.__DOMNode.childNodes);
-  }
+  // remove excess children
+  if (oldNode) removeExtraChildren(oldNode.children || [], vNode.children.length);
 }
 
 export { render as hydrate, render, render as createPortal };

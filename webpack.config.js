@@ -1,7 +1,5 @@
 const path = require('path');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -11,7 +9,7 @@ const production = process.env.NODE_ENV === 'production';
 const development = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
 module.exports = {
-  target: 'web',
+  mode: production ? 'production' : 'development',
   name: 'client',
   devtool: development ? 'cheap-module-source-map' : undefined,
   devServer: {
@@ -30,7 +28,7 @@ module.exports = {
     extensions: [".js", ".jsx", ".scss"],
     /* NOTE: Uncomment this when making changes to the library files to use the local build */
     alias: {
-      'tiny-jsx': path.resolve(__dirname, './dist/'),
+      'tiny-jsx': path.resolve(__dirname, 'dist/'),
     }
   },
   module: {
@@ -109,11 +107,7 @@ module.exports = {
       inject: 'head',
       excludeChunks: ['clock', 'todos'],
     }),
-    new ScriptExtHtmlWebpackPlugin({
-      defaultAttribute: 'defer',
-    }),
     new CompressionPlugin(),
-    production && new webpack.HashedModuleIdsPlugin(),
     production && new BundleAnalyzerPlugin({ analyzerMode: 'static', reportFilename: path.join(DIST_PATH, 'report.html') }),
   ].filter(Boolean),
 };

@@ -1,57 +1,37 @@
-import { emitter } from '../emitter';
+const Fragment = 'fragment';
 
-const Fragment = {
-  type: 'fragment',
-};
-
-function convert(value) {
-  if (typeof value === 'string' || typeof value === 'number') {
-    return { type: 'text', props: {}, __value: String(value) };
-  }
-  return value;
-}
-
-function buildChildren(children) {
-  if (typeof children === 'undefined' || children === null || children === false) return [];
-  return (Array.isArray(children) ? children.map(convert) : [convert(children)]);
-}
-
-function unmount(vNode) {
-  if (vNode.type !== 'fragment') return;
-  typeof vNode.__cleanup === 'function' && vNode.__cleanup();
-  vNode.props.children && vNode.props.children.forEach(unmount);
-}
-
-function createElement(type, props, children) {
-  props = Object.assign({}, props );
-
-  props.children = buildChildren(children);
-  if (arguments.length > 3) {
-    for (let i = 3; i < arguments.length; i++) {
-      props.children.push(convert(arguments[i]));
+function createElement(name, attributes = {}, ...args) {
+  const children = (args.length ? [].concat(...args) : []).filter(Boolean).map(function(child) {
+    const type = typeof child;
+    if (child === null || type === 'boolean' || type === 'undefined') {
+      return { name: 'empty', value: child, children: [], attributes: {} };
     }
+    // Render primitives as a text node.
+    if (
+      type === 'string'
+      || type === 'number'
+      || type === 'bigint'
+      || type === 'symbol'
+    ) {
+      return { name: 'text', value: child, children: [], attributes: {} };
+    }
+    return child;
+  });
+
+  if (name === 'fragment') {
+    return children;
   }
 
-  if (typeof type === 'function') {
-    const fn = { type: 'fragment', props, __effects: [], __hooks: [] };
-    fn.__mount = function () {
-      emitter.emit('mount', fn);
-      fn.props.children = buildChildren(type(props));
-    };
-    fn.__cleanup = function() {
-      fn.__hooks.forEach(function(hook) {
-        typeof hook.__cleanup === 'function' && hook.__cleanup();
-      });
-    };
-    fn.__unmount = function() {
-      unmount(fn);
-    };
-    return fn;
-  } else if (typeof type === 'object') {
-    return Object.assign({}, type, { props });
+  const type = typeof name;
+  if (type === 'function') {
+    return { name: 'function', children, attributes: Object.assign({}, attributes, { children }), value: name };
   }
 
-  return { type, props };
+  if (name === null || type === 'boolean' || type === 'undefined') {
+    return { name: 'empty', value: name, children: [], attributes: {} };
+  }
+
+  return { name, value: null, children, attributes: Object.assign({}, attributes, { children }) };
 }
 
 function createRef() {
@@ -74,6 +54,7 @@ function createContext() {
 }
 
 export { createElement, createRef, createContext, Fragment };
+
 export default {
   createElement,
   createRef,

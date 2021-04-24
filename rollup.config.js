@@ -1,6 +1,6 @@
 import { compress } from 'brotli';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 import analyze from 'rollup-plugin-analyzer';
 import copy from 'rollup-plugin-copy';
@@ -27,7 +27,6 @@ export default [
       file: 'dist/tiny-jsx.dev.js',
       format: 'iife',
       sourcemap: 'inline',
-      target: 'web',
       exports: 'named',
     },
     plugins,
@@ -39,7 +38,6 @@ export default [
       file: 'dist/tiny-jsx.min.js',
       format: 'iife',
       sourcemap: false,
-      target: 'web',
       exports: 'named',
     },
     plugins: [
@@ -56,7 +54,6 @@ export default [
       format: 'iife',
       sourcemap: 'inline',
       exports: 'named',
-      target: 'web',
       globals: {
         '..': 'TinyJSX',
       },
@@ -72,7 +69,6 @@ export default [
       format: 'iife',
       sourcemap: false,
       exports: 'named',
-      target: 'web',
       globals: {
         '..': 'TinyJSX',
       },
@@ -91,7 +87,6 @@ export default [
       format: 'iife',
       sourcemap: 'inline',
       exports: 'named',
-      target: 'web',
       globals: {
         '..': 'TinyJSX',
       },
@@ -107,7 +102,6 @@ export default [
       format: 'iife',
       sourcemap: false,
       exports: 'named',
-      target: 'web',
       globals: {
         '..': 'TinyJSX',
       },
@@ -126,7 +120,6 @@ export default [
       format: 'iife',
       sourcemap: 'inline',
       exports: 'named',
-      target: 'web',
       globals: {
         '..': 'TinyJSX',
       },
@@ -142,7 +135,6 @@ export default [
       format: 'iife',
       sourcemap: false,
       exports: 'named',
-      target: 'web',
       globals: {
         '..': 'TinyJSX',
       },
@@ -155,8 +147,8 @@ export default [
   {
     input: 'packages/emitter/index.js',
     output: [
-      { dir: 'dist/emitter', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/emitter', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/emitter', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/emitter', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -168,8 +160,8 @@ export default [
     input: 'packages/hooks/core.js',
     external: ['..'],
     output: [
-      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -181,8 +173,8 @@ export default [
     input: 'packages/hooks/useCallback.js',
     external: ['./useMemo', './core'],
     output: [
-      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -194,8 +186,8 @@ export default [
     input: 'packages/hooks/useContext.js',
     external: ['./core'],
     output: [
-      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -206,8 +198,8 @@ export default [
   {
     input: 'packages/hooks/useDebugValue.js',
     output: [
-      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -219,8 +211,8 @@ export default [
     input: 'packages/hooks/useEffect.js',
     external: ['./core'],
     output: [
-      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -232,8 +224,8 @@ export default [
     input: 'packages/hooks/useImperativeHandle.js',
     external: ['./core'],
     output: [
-      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -245,8 +237,8 @@ export default [
     input: 'packages/hooks/useLayoutEffect.js',
     external: ['./core'],
     output: [
-      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -258,8 +250,8 @@ export default [
     input: 'packages/hooks/useMemo.js',
     external: ['./core'],
     output: [
-      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -271,8 +263,8 @@ export default [
     input: 'packages/hooks/useReducer.js',
     external: ['./core'],
     output: [
-      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -285,8 +277,8 @@ export default [
     input: 'packages/hooks/useRef.js',
     external: ['./core'],
     output: [
-      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -298,8 +290,8 @@ export default [
     input: 'packages/hooks/useState.js',
     external: ['./useReducer', './core'],
     output: [
-      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -311,8 +303,8 @@ export default [
     input: 'packages/hooks/core.js',
     external: ['..'],
     output: [
-      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -324,8 +316,8 @@ export default [
     input: 'packages/hooks/index.js',
     external: ['./useCallback', './useContext', './useDebugValue', './useEffect', './useImperativeHandle', './useMemo', './useReducer', './useRef', './useState', './core'],
     output: [
-      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -337,8 +329,8 @@ export default [
     input: 'packages/dom/index.js',
     external: ['..'],
     output: [
-      { dir: 'dist/dom', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/dom', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/dom', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/dom', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -350,8 +342,8 @@ export default [
     input: 'packages/server/index.js',
     external: ['..'],
     output: [
-      { dir: 'dist/server', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/server', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/server', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/server', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -363,8 +355,8 @@ export default [
     input: 'packages/router/index.js',
     external: ['..', '../hooks/useEffect', '../hooks/useMemo', '../hooks/useState'],
     output: [
-      { dir: 'dist/router', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es/router', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist/router', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es/router', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),
@@ -376,8 +368,8 @@ export default [
     input: 'packages/index.js',
     external: ['../emitter', './emitter'],
     output: [
-      { dir: 'dist', format: 'cjs', exports: 'named', entryFileNames: '[name].js', target: 'node' },
-      { dir: 'dist/es', format: 'esm', exports: 'named', entryFileNames: '[name].js', target: 'node' },
+      { dir: 'dist', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
+      { dir: 'dist/es', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
     ],
     plugins: [
       resolve(),

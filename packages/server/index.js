@@ -15,8 +15,8 @@ function styles(value = {}) {
 
 function renderChildren(vNode) {
   let html = '';
-  for (let i = 0; i < vNode.props.children.length; i++) {
-    html = html + renderToString(vNode.props.children[i]);
+  for (let i = 0; i < vNode.attributes.children.length; i++) {
+    html = html + renderToString(vNode.attributes.children[i]);
   }
   return html;
 }
@@ -31,10 +31,10 @@ function renderToString(vNode) {
     return vNode.__value;
   } else {
     html = '<' + vNode.type;
-    for (let key in vNode.props) {
-      if (vNode.props.hasOwnProperty(key)) {
+    for (let key in vNode.attributes) {
+      if (vNode.attributes.hasOwnProperty(key)) {
         if (key !== 'children' && key !== 'key' && key !== 'ref' && key !== 'path') {
-          const value = vNode.props[key];
+          const value = vNode.attributes[key];
           // const isSvg = vNode.type === 'svg';
           const name = key === 'className' ? 'class' : key;
           if ( name === 'style') {
@@ -54,7 +54,7 @@ function renderToString(vNode) {
     }
   }
 
-  if (vNode.props.children) html = html + renderChildren(vNode);
+  if (vNode.attributes.children) html = html + renderChildren(vNode);
 
   if (vNode.type !== 'function' && vNode.type !== 'fragment') {
     html += '</' + vNode.type + '>';

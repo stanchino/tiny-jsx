@@ -1,4 +1,4 @@
-import { emitter, state, getHookState, invokeOrReturn } from './core';
+import { state, getHookState, invokeOrReturn } from './core';
 
 function useReducer(reducer, initialState, init) {
   const hookState = getHookState(state.index++);
@@ -12,7 +12,7 @@ function useReducer(reducer, initialState, init) {
         const nextValue = reducer(hookState.__value[0], action);
         if (hookState.__value[0] !== nextValue) {
           hookState.__value[0] = nextValue;
-          emitter.emit('render', hookState.__vNode);
+          hookState.__vNode.refresh();
         }
       }
     ];

@@ -21,7 +21,7 @@ const plugins = [
 
 export default [
   {
-    input: 'packages/index.js',
+    input: 'src/index.js',
     output: {
       name: 'TinyJSX',
       file: 'dist/tiny-jsx.dev.js',
@@ -32,7 +32,7 @@ export default [
     plugins,
   },
   {
-    input: 'packages/index.js',
+    input: 'src/index.js',
     output: {
       name: 'TinyJSX',
       file: 'dist/tiny-jsx.min.js',
@@ -46,7 +46,7 @@ export default [
     ],
   },
   {
-    input: 'packages/dom/index.js',
+    input: 'src/dom/index.js',
     external: ['..'],
     output: {
       name: 'TinyJSXDom',
@@ -61,7 +61,7 @@ export default [
     plugins,
   },
   {
-    input: 'packages/dom/index.js',
+    input: 'src/dom/index.js',
     external: ['..'],
     output: {
       name: 'TinyJSXDom',
@@ -79,7 +79,7 @@ export default [
     ],
   },
   {
-    input: 'packages/hooks/index.js',
+    input: 'src/hooks/index.js',
     external: ['..'],
     output: {
       name: 'TinyJSXHooks',
@@ -94,7 +94,7 @@ export default [
     plugins,
   },
   {
-    input: 'packages/hooks/index.js',
+    input: 'src/hooks/index.js',
     external: ['..'],
     output: {
       name: 'TinyJSXHooks',
@@ -112,7 +112,7 @@ export default [
     ],
   },
   {
-    input: 'packages/router/index.js',
+    input: 'src/router/index.js',
     external: ['..'],
     output: {
       name: 'TinyJSXRouter',
@@ -127,7 +127,7 @@ export default [
     plugins,
   },
   {
-    input: 'packages/router/index.js',
+    input: 'src/router/index.js',
     external: ['..'],
     output: {
       name: 'TinyJSXRouter',
@@ -145,7 +145,7 @@ export default [
     ],
   },
   {
-    input: 'packages/emitter/index.js',
+    input: 'src/emitter/index.js',
     output: [
       { dir: 'dist/emitter', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
       { dir: 'dist/es/emitter', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
@@ -157,7 +157,7 @@ export default [
     ]
   },
   {
-    input: 'packages/hooks/core.js',
+    input: 'src/hooks/core.js',
     external: ['..'],
     output: [
       { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -170,7 +170,7 @@ export default [
     ]
   },
   {
-    input: 'packages/hooks/useCallback.js',
+    input: 'src/hooks/useCallback.js',
     external: ['./useMemo', './core'],
     output: [
       { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -183,7 +183,7 @@ export default [
     ]
   },
   {
-    input: 'packages/hooks/useContext.js',
+    input: 'src/hooks/useContext.js',
     external: ['./core'],
     output: [
       { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -196,7 +196,7 @@ export default [
     ]
   },
   {
-    input: 'packages/hooks/useDebugValue.js',
+    input: 'src/hooks/useDebugValue.js',
     output: [
       { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
       { dir: 'dist/es/hooks', format: 'esm', exports: 'named', entryFileNames: '[name].js' },
@@ -208,7 +208,7 @@ export default [
     ]
   },
   {
-    input: 'packages/hooks/useEffect.js',
+    input: 'src/hooks/useEffect.js',
     external: ['./core'],
     output: [
       { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -221,7 +221,7 @@ export default [
     ]
   },
   {
-    input: 'packages/hooks/useImperativeHandle.js',
+    input: 'src/hooks/useImperativeHandle.js',
     external: ['./core'],
     output: [
       { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -234,7 +234,7 @@ export default [
     ]
   },
   {
-    input: 'packages/hooks/useLayoutEffect.js',
+    input: 'src/hooks/useLayoutEffect.js',
     external: ['./core'],
     output: [
       { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -247,7 +247,7 @@ export default [
     ]
   },
   {
-    input: 'packages/hooks/useMemo.js',
+    input: 'src/hooks/useMemo.js',
     external: ['./core'],
     output: [
       { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -260,7 +260,7 @@ export default [
     ]
   },
   {
-    input: 'packages/hooks/useReducer.js',
+    input: 'src/hooks/useReducer.js',
     external: ['./core'],
     output: [
       { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -274,7 +274,7 @@ export default [
   },
 
   {
-    input: 'packages/hooks/useRef.js',
+    input: 'src/hooks/useRef.js',
     external: ['./core'],
     output: [
       { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -287,7 +287,7 @@ export default [
     ]
   },
   {
-    input: 'packages/hooks/useState.js',
+    input: 'src/hooks/useState.js',
     external: ['./useReducer', './core'],
     output: [
       { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -300,7 +300,7 @@ export default [
     ]
   },
   {
-    input: 'packages/hooks/core.js',
+    input: 'src/hooks/core.js',
     external: ['..'],
     output: [
       { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -313,7 +313,7 @@ export default [
     ]
   },
   {
-    input: 'packages/hooks/index.js',
+    input: 'src/hooks/index.js',
     external: ['./useCallback', './useContext', './useDebugValue', './useEffect', './useImperativeHandle', './useMemo', './useReducer', './useRef', './useState', './core'],
     output: [
       { dir: 'dist/hooks', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -326,7 +326,7 @@ export default [
     ]
   },
   {
-    input: 'packages/dom/index.js',
+    input: 'src/dom/index.js',
     external: ['..'],
     output: [
       { dir: 'dist/dom', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -339,7 +339,7 @@ export default [
     ]
   },
   {
-    input: 'packages/server/index.js',
+    input: 'src/server/index.js',
     external: ['..'],
     output: [
       { dir: 'dist/server', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -352,7 +352,7 @@ export default [
     ]
   },
   {
-    input: 'packages/router/index.js',
+    input: 'src/router/index.js',
     external: ['..', '../hooks/useEffect', '../hooks/useMemo', '../hooks/useState'],
     output: [
       { dir: 'dist/router', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -365,7 +365,7 @@ export default [
     ]
   },
   {
-    input: 'packages/index.js',
+    input: 'src/index.js',
     external: ['../emitter', './emitter'],
     output: [
       { dir: 'dist', format: 'cjs', exports: 'named', entryFileNames: '[name].js' },
@@ -377,7 +377,7 @@ export default [
       copy({
         targets: [
           { src: 'README.md', dest: 'dist/' },
-          { src: 'packages/core/package.json', dest: 'dist/' },
+          { src: 'package.json', dest: 'dist/' },
         ]
       }),
       analyze(),

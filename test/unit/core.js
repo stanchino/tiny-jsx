@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { createElement, createRef, createContext, Fragment } = require("../../packages");
+const { createElement, createRef, createContext, Fragment } = require("../../src");
 
 describe('Fragment', function() {
   it('returns the string', function() {

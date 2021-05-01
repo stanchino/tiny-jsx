@@ -2,8 +2,19 @@
   "name": "tiny-jsx",
   "version": "1.1.5",
   "license": "MIT",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "author": {
+    "name": "Stanimir Dimitrov",
+    "email": "stanchino@gmail.com"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stanchino/tiny-jsx.git"
+  },
+  "main": "index.js",
+  "module": "es/index.js",
   "files": [
     "dist"
   ],
@@ -12,15 +23,6 @@
     "tiny-jsx/dom": "dist/tiny-jsx-dom.min.js",
     "tiny-jsx/hooks": "dist/tiny-jsx-hooks.min.js",
     "tiny-jsx/router": "dist/tiny-jsx-router.min.js"
-  },
-  "source": "packages/index.js",
-  "types": "dist/index.d.ts",
-  "engines": {
-    "node": ">=10.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/stanchino/tiny-jsx.git"
   },
   "scripts": {
     "watch": "rimraf dist && rollup -c --watch",

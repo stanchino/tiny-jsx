@@ -14,4 +14,11 @@ module.exports = {
   plugins: [
     ['@babel/plugin-transform-react-jsx', { pragma: 'TinyJSX.createElement', pragmaFrag: 'TinyJSX.Fragment' }],
   ],
+  env: {
+    test: {
+      plugins: [
+        ["istanbul"]
+      ],
+    }
+  },
 };

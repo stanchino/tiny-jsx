@@ -3,9 +3,6 @@ const Fragment = 'fragment';
 function createElement(name, attributes = {}, ...args) {
   const children = (args.length ? [].concat(...args) : []).filter(Boolean).map(function(child) {
     const type = typeof child;
-    if (child === null || type === 'boolean' || type === 'undefined') {
-      return { name: 'empty', value: child, children: [], attributes: {} };
-    }
     // Render primitives as a text node.
     if (
       type === 'string'
@@ -13,7 +10,7 @@ function createElement(name, attributes = {}, ...args) {
       || type === 'bigint'
       || type === 'symbol'
     ) {
-      return { name: 'text', value: child, children: [], attributes: {} };
+      return { name: 'text', value: child.toString(), children: [], attributes: {} };
     }
     return child;
   });
@@ -35,7 +32,7 @@ function createElement(name, attributes = {}, ...args) {
 }
 
 function createRef() {
-  return {};
+  return { current: null };
 }
 
 function createContext() {
@@ -53,11 +50,15 @@ function createContext() {
   };
 }
 
-export { createElement, createRef, createContext, Fragment };
-
-export default {
+module.exports = {
+  default: {
+    createElement,
+    createRef,
+    createContext,
+    Fragment
+  },
   createElement,
   createRef,
   createContext,
-  Fragment,
+  Fragment
 };

@@ -6,6 +6,6 @@ module.exports = {
   ...babelConfig,
   all: true,
   'check-coverage': true,
-  include: ['packages/**/*.js'],
+  include: ['packages/core/*.js'],
   reporter: ['text', 'lcov'],
 };

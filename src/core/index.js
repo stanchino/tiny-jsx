@@ -50,15 +50,6 @@ function createContext() {
   };
 }
 
-module.exports = {
-  default: {
-    createElement,
-    createRef,
-    createContext,
-    Fragment
-  },
-  createElement,
-  createRef,
-  createContext,
-  Fragment
-};
+export { Fragment, createElement, createRef, createContext };
+
+export default { Fragment, createElement, createRef, createContext };

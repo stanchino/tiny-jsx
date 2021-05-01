@@ -1,6 +1,6 @@
 {
   "name": "tiny-jsx",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "license": "MIT",
   "author": {
     "name": "Stanimir Dimitrov",
@@ -9,21 +9,13 @@
   "engines": {
     "node": ">=10.0.0"
   },
+  "browserslist": ["> 0.25%, not dead, ie >= 9"],
   "repository": {
     "type": "git",
     "url": "https://github.com/stanchino/tiny-jsx.git"
   },
   "main": "index.js",
   "module": "es/index.js",
-  "files": [
-    "dist"
-  ],
-  "browser": {
-    "tiny-jsx": "dist/tiny-jsx.min.js",
-    "tiny-jsx/dom": "dist/tiny-jsx-dom.min.js",
-    "tiny-jsx/hooks": "dist/tiny-jsx-hooks.min.js",
-    "tiny-jsx/router": "dist/tiny-jsx-router.min.js"
-  },
   "scripts": {
     "watch": "rimraf dist && rollup -c --watch",
     "dev:server": "sleep 1 && webpack serve",

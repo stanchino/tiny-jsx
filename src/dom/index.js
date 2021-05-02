@@ -1,4 +1,4 @@
-const { state } = require('../hooks/core');
+import { state } from '../hooks/core';
 
 const XLINK_NS = 'http://www.w3.org/1999/xlink';
 

@@ -40,7 +40,7 @@
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "compression-webpack-plugin": "^7.1.2",
     "core-js": "3.11.0",
-    "cypress": "^7.2.0",
+    "cypress": "^15.10.0",
     "esm": "^3.2.25",
     "html-webpack-plugin": "^5.3.1",
     "mocha": "^8.3.2",
